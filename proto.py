@@ -6,6 +6,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.signal import *
+from scipy.fftpack import *
 #*************************
 
 def mfcc(samples, winlen = 400, winshift = 200, preempcoeff=0.97, nfft=512, nceps=13, samplingrate=20000, liftercoeff=22):
@@ -90,7 +91,6 @@ def preemp(input, p=0.97):
         preemph = np.vstack((preemph,sig))
     return preemph[1:]
 
-
 def windowing(input):
     """
     Applies hamming window to the input frames.
@@ -106,8 +106,8 @@ def windowing(input):
     window = hamming(input.shape[1],sym=False)
 
     # plot the window
-    plt.plot(window)
-    plt.show()
+    # plt.plot(window)
+    # plt.show()
 
     windowed = np.zeros(input.shape[1])
     for i in range(input.shape[0]):
@@ -126,6 +126,12 @@ def powerSpectrum(input, nfft):
         array of power spectra [N x nfft]
     Note: you can use the function fft from scipy.fftpack
     """
+    spec = np.zeros(nfft)
+    for i in range(input.shape[0]):
+        f_t = fft(input[i], nfft , axis=-1, overwrite_x=False)
+        f_t = f_t.real**2+f_t.imag**2
+        spec = np.vstack((spec,f_t))
+    return spec[1:]
 
 def logMelSpectrum(input, samplingrate):
     """
@@ -187,6 +193,7 @@ if __name__== "__main__":
     # result_f = sum(sum(frames-compare_f))
     # print(result_f)
 
+    # plot the array
     # plt.pcolormesh(frames)
     # plt.show()
 
@@ -198,6 +205,7 @@ if __name__== "__main__":
     # compare_p = example['preemph']
     # print((preemph == compare_p).all())
 
+    # plot the array
     # plt.pcolormesh(preemph)
     # plt.show()
 
@@ -205,7 +213,17 @@ if __name__== "__main__":
     windowed = windowing(preemph)
 
     # varify with example['windowed']
-    compare_w = example['windowed']
-    print((windowed == compare_w).all())
+    # compare_w = example['windowed']
+    # print((windowed == compare_w).all())
 
     #---------------FFT----------------------
+    nfft = 512
+    spec = powerSpectrum(windowed, nfft)
+
+    # varify with example['windowed']
+    # compare_s = example['spec']
+    # print((abs(spec - compare_s)<0.0000001).all())
+
+    # plot the array
+    # plt.pcolormesh(spec)
+    # plt.show()
