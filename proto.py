@@ -153,8 +153,8 @@ def logMelSpectrum(input, samplingrate):
     mspec = []
     fbank = trfbank(samplingrate, nfft, lowfreq=133.33, linsc=200 / 3., logsc=1.0711703, nlinfilt=13, nlogfilt=27,
                     equalareas=False)
-    plt.plot(fbank.T)
-    plt.show()
+    # plt.plot(fbank.T)
+    # plt.show()
     for i in range(input.shape[0]):
         result = np.dot(input[i].reshape(1,-1),fbank.T)
         f_result = np.log(result)
@@ -176,7 +176,9 @@ def cepstrum(input, nceps):
         array of Cepstral coefficients [N x nceps]
     Note: you can use the function dct from scipy.fftpack.realtransforms
     """
-    
+    ceps = dct(input, type=2, axis=1, norm='ortho')[:, 0: nceps]
+    return ceps
+
 
 def dtw(x, y, dist):
     """Dynamic Time Warping.
@@ -251,8 +253,31 @@ if __name__== "__main__":
 
     # varify with example['mspec']
     # compare_m = example['mspec']
-    # print((mspec == compare_m).all())
+    # print((abs(mspec - compare_m) < 0.0000001).all())
 
     # plot the array
     # plt.pcolormesh(mspec)
     # plt.show()
+
+    # --------------Cosine Transofrm------------------
+    coeff =  np.arange(13).reshape(1,-1)
+    nceps = coeff.shape[1]
+
+    ceps = cepstrum(mspec, nceps)
+
+    # plt.pcolormesh(ceps)
+    # plt.show()
+
+    # varify with example['mfcc']
+    # compare_c = example['mfcc']
+    # print((abs(ceps - compare_c) < 0.0000001).all())
+
+    #------------------lmfcc--------------------------
+    lmfcc = lifter(ceps, lifter=22)
+
+    # plt.pcolormesh(lmfcc)
+    # plt.show()
+
+    # varify with example['lmfcc']
+    # compare_l = example['lmfcc']
+    # print((abs(lmfcc - compare_l) < 0.0000001).all())
