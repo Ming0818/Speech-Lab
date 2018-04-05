@@ -35,6 +35,29 @@ def mfcc(samples, winlen = 400, winshift = 200, preempcoeff=0.97, nfft=512, ncep
     ceps = cepstrum(mspec, nceps)
     return lifter(ceps, liftercoeff)
 
+
+def mspec(samples, winlen = 400, winshift = 200, preempcoeff=0.97, nfft=512, nceps=13, samplingrate=20000, liftercoeff=22):
+    """Computes Mel Frequency Cepstrum Coefficients.
+
+    Args:
+        samples: array of speech samples with shape (N,)
+        winlen: lenght of the analysis window
+        winshift: number of samples to shift the analysis window at every time step
+        preempcoeff: pre-emphasis coefficient
+        nfft: length of the Fast Fourier Transform (power of 2, >= winlen)
+        nceps: number of cepstrum coefficients to compute
+        samplingrate: sampling rate of the original signal
+        liftercoeff: liftering coefficient used to equalise scale of MFCCs
+
+    Returns:
+        N x nceps array with lifetered MFCC coefficients
+    """
+    frames = enframe(samples, winlen, winshift)
+    preemph = preemp(frames, preempcoeff)
+    windowed = windowing(preemph)
+    spec = powerSpectrum(windowed, nfft)
+    return logMelSpectrum(spec, samplingrate)
+
 # Functions to be implemented ----------------------------------
 
 def enframe(samples, winlen, winshift):

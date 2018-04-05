@@ -1,10 +1,6 @@
 import proto
-import numpy as np
 import matplotlib.pyplot as plt
-from scipy.signal import *
-from scipy.fftpack import *
 from tools import *
-from scipy.fftpack.realtransforms import *
 
 if __name__== "__main__":
     data = np.load('lab1_data.npz')['data']
