@@ -203,6 +203,13 @@ if __name__== "__main__":
     example = np.load('lab1_example.npz')['example'].item()
     samples = example['samples']
     samples_samplingrate =example['samplingrate']
+
+    # plot the original signal
+    plt.subplot(8, 1, 1)
+    plt.plot(samples)
+    plt.axis('off')
+    # plt.show()
+
     # ------------enframe-------------------
     winlen=400
     winshift= 200
@@ -214,7 +221,9 @@ if __name__== "__main__":
     # print(result_f)
 
     # plot the array
-    # plt.pcolormesh(frames)
+    plt.subplot(8, 1, 2)
+    plt.pcolormesh(frames.T)
+    plt.axis('off')
     # plt.show()
 
     #-------------preemp---------------------
@@ -226,11 +235,19 @@ if __name__== "__main__":
     # print((preemph == compare_p).all())
 
     # plot the array
-    # plt.pcolormesh(preemph)
+    plt.subplot(8, 1, 3)
+    plt.pcolormesh(preemph.T)
+    plt.axis('off')
     # plt.show()
 
     # -------------window---------------------
     windowed = windowing(preemph)
+
+    # plot the array
+    plt.subplot(8, 1, 4)
+    plt.pcolormesh(windowed.T)
+    plt.axis('off')
+    # plt.show()
 
     # varify with example['windowed']
     # compare_w = example['windowed']
@@ -245,7 +262,9 @@ if __name__== "__main__":
     # print((abs(spec - compare_s)<0.0000001).all())
 
     # plot the array
-    # plt.pcolormesh(spec)
+    plt.subplot(8, 1, 5)
+    plt.pcolormesh(spec.T)
+    plt.axis('off')
     # plt.show()
 
     #---------------Mel filterbank log spectrum------
@@ -256,7 +275,9 @@ if __name__== "__main__":
     # print((abs(mspec - compare_m) < 0.0000001).all())
 
     # plot the array
-    # plt.pcolormesh(mspec)
+    plt.subplot(8, 1, 6)
+    plt.pcolormesh(mspec.T)
+    plt.axis('off')
     # plt.show()
 
     # --------------Cosine Transofrm------------------
@@ -265,7 +286,9 @@ if __name__== "__main__":
 
     ceps = cepstrum(mspec, nceps)
 
-    # plt.pcolormesh(ceps)
+    plt.subplot(8, 1, 7)
+    plt.pcolormesh(ceps.T)
+    plt.axis('off')
     # plt.show()
 
     # varify with example['mfcc']
@@ -275,9 +298,13 @@ if __name__== "__main__":
     #------------------lmfcc--------------------------
     lmfcc = lifter(ceps, lifter=22)
 
-    # plt.pcolormesh(lmfcc)
+    plt.subplot(8, 1, 8)
+    plt.pcolormesh(lmfcc.T)
+    plt.axis('off')
     # plt.show()
 
     # varify with example['lmfcc']
     # compare_l = example['lmfcc']
     # print((abs(lmfcc - compare_l) < 0.0000001).all())
+
+    plt.show()
