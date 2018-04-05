@@ -7,6 +7,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.signal import *
 from scipy.fftpack import *
+from tools import *
+from scipy.fftpack.realtransforms import *
 #*************************
 
 def mfcc(samples, winlen = 400, winshift = 200, preempcoeff=0.97, nfft=512, nceps=13, samplingrate=20000, liftercoeff=22):
@@ -147,6 +149,20 @@ def logMelSpectrum(input, samplingrate):
     Note: use the trfbank function provided in tools.py to calculate the filterbank shapes and
           nmelfilters
     """
+    nfft = input.shape[1]
+    mspec = []
+    fbank = trfbank(samplingrate, nfft, lowfreq=133.33, linsc=200 / 3., logsc=1.0711703, nlinfilt=13, nlogfilt=27,
+                    equalareas=False)
+    plt.plot(fbank.T)
+    plt.show()
+    for i in range(input.shape[0]):
+        result = np.dot(input[i].reshape(1,-1),fbank.T)
+        f_result = np.log(result)
+        if(i == 0):
+            mspec = f_result
+        else:
+            mspec = np.vstack((mspec, f_result))
+    return mspec
 
 def cepstrum(input, nceps):
     """
@@ -160,6 +176,7 @@ def cepstrum(input, nceps):
         array of Cepstral coefficients [N x nceps]
     Note: you can use the function dct from scipy.fftpack.realtransforms
     """
+    
 
 def dtw(x, y, dist):
     """Dynamic Time Warping.
@@ -183,6 +200,7 @@ if __name__== "__main__":
     data = np.load('lab1_data.npz')['data']
     example = np.load('lab1_example.npz')['example'].item()
     samples = example['samples']
+    samples_samplingrate =example['samplingrate']
     # ------------enframe-------------------
     winlen=400
     winshift= 200
@@ -227,3 +245,14 @@ if __name__== "__main__":
     # plot the array
     # plt.pcolormesh(spec)
     # plt.show()
+
+    #---------------Mel filterbank log spectrum------
+    mspec = logMelSpectrum(spec, samples_samplingrate)
+
+    # varify with example['mspec']
+    # compare_m = example['mspec']
+    # print((mspec == compare_m).all())
+
+    # plot the array
+    plt.pcolormesh(mspec)
+    plt.show()
