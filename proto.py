@@ -254,5 +254,5 @@ if __name__== "__main__":
     # print((mspec == compare_m).all())
 
     # plot the array
-    plt.pcolormesh(mspec)
-    plt.show()
+    # plt.pcolormesh(mspec)
+    # plt.show()
