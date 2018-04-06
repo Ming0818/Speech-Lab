@@ -2,6 +2,7 @@ import proto
 import matplotlib.pyplot as plt
 from tools import *
 import numpy as np
+from scipy.cluster.hierarchy import linkage, dendrogram
 
 def getData():
     data = np.load('lab1_data.npz')['data']
@@ -18,5 +19,14 @@ if __name__== "__main__":
     globalD = np.loadtxt('distance')
 
     # display matrix with pcolormesh
-    plt.pcolormesh(globalD)
+    # plt.pcolormesh(globalD)
+    # plt.show()
+
+    # hierarchical clustering
+    Z = linkage(globalD, 'complete')
+    # get label
+    data = np.load('lab1_data.npz')['data']
+    labels = tidigit2labels(data)
+    # plot with labels
+    dn = dendrogram(Z,labels=labels)
     plt.show()
