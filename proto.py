@@ -203,7 +203,7 @@ def cepstrum(input, nceps):
     return ceps
 
 
-def dtw(x, y, dist):
+def dtw(x, y):
     """Dynamic Time Warping.
 
     Args:
@@ -219,3 +219,30 @@ def dtw(x, y, dist):
 
     Note that you only need to define the first output for this exercise.
     """
+    # compute local distances
+    locD = np.zeros((x.shape[0],y.shape[0]))
+    for i in range(x.shape[0]):
+        for j in range(y.shape[0]):
+            locD[i][j] = dist(x[i],y[j])
+    # print(locD)
+
+    # dynamic programming
+    accD = np.zeros((x.shape[0], y.shape[0]))
+    for h in range(accD.shape[0]):
+        for k in range(accD.shape[1]):
+            if h == 0 and k == 0:
+                accD[h][k] = locD[h][k]
+                continue
+            if h == 0:
+                accD[h][k] = locD[h][k] + accD[h][k - 1]
+                continue
+            if k == 0:
+                accD[h][k] = locD[h][k] + accD[h - 1][k]
+                continue
+            accD[h][k] = locD[h][k] + min(accD[h - 1][k], accD[h - 1][k - 1], accD[h][k - 1])
+
+    return accD[accD.shape[0]-1][accD.shape[1]-1]
+
+def dist(vector1,vector2):
+    d = np.linalg.norm(vector1-vector2)
+    return d
