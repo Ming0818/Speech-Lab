@@ -14,8 +14,9 @@ def Get_Most(list):
 
 if __name__== "__main__":
     data = np.load('lab1_data.npz')['data']
-    mfcc_length = []
+    mfcc_orignal = []
     index = []
+
     piece = data[0]
     samples = piece['samples']
     samples_samplingrate = piece['samplingrate']
@@ -23,6 +24,8 @@ if __name__== "__main__":
     mfccs = proto.mfcc(samples, samplingrate=samples_samplingrate)
     # save the index
     index.append(mfccs.shape[0])
+    # orignal mfcc
+    mfcc_orignal.append(mfccs)
 
     for i in range(len(data)):
         if i == 0:
@@ -35,38 +38,37 @@ if __name__== "__main__":
         mfccs = np.vstack((mfccs, mfcc))
         # save the index
         index.append(mfccs.shape[0])
+        # original mfcc
+        mfcc_orignal.append(mfcc)
 
-
-    g = GaussianMixture(n_components=4)
+    g = GaussianMixture(n_components=32)
     # Generate random observations w
     g.fit(mfccs)
 
-    # calculate the posterior
-    # resp = g.predict_proba(mfccs)
-    # # get the largest probability and change array to list
-    # index_resp = resp.argmax(axis=1).tolist()
+    # calculate the posterior(whole matrix)
+    resp = g.predict_proba(mfccs).tolist()
 
-    # use the predict function
-    resp = g.predict(mfccs)
-    index_resp = resp.tolist()
+    # calculate the posterior(one by one)
+    posterior_result = []
+    for i in range(len(index)):
+        r = g.predict_proba(mfcc_orignal[i]).tolist()
+        posterior_result.append(r)
 
-    cluster_mfccs = []
-    # save the same samples
+    cluster_mfccs_result = []
     for i in range(len(index)):
         if i == 0:
-            cluster_mfccs.append(index_resp[0:index[0]])
+            cluster_mfccs_result.append(resp[0:index[0]])
             continue
-        cluster_mfccs.append(index_resp[index[i-1]:index[i]])
+        cluster_mfccs_result.append(resp[index[i-1]:index[i]])
 
-    # get the most times
-    result = []
-    for i in range(len(cluster_mfccs)):
-        c = Get_Most(cluster_mfccs[i])
-        result.append(c)
+    # compare
+    # for i in range(len(index)):
+        # print( (abs(np.array(cluster_mfccs_result[i]) - np.array(posterior_result[i]))<0.0001 ).all())
 
-    # show the result
-    x = range(0,len(data))
-    plt.scatter(x, result)
+    for i in range(len(index)):
+        plt.subplot(2,22,i+1)
+        plt.title("{}".format(i))
+        # plt.imshow(cluster_mfccs_result[i])
+        plt.imshow(posterior_result[i])
+        plt.axis('off')
     plt.show()
-
-
