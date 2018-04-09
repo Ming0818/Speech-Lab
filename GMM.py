@@ -3,14 +3,9 @@ from sklearn.mixture import *
 import proto
 import matplotlib.pyplot as plt
 from tools import *
+import math
 
 np.random.seed(10)
-
-
-def Get_Most(list):
-    item_num = dict((item,list.count(item)) for item in list)
-    i = max(item_num.items(), key= lambda x:x[1])[0]
-    return i
 
 if __name__== "__main__":
     data = np.load('lab1_data.npz')['data']
@@ -64,11 +59,39 @@ if __name__== "__main__":
     # compare
     # for i in range(len(index)):
         # print( (abs(np.array(cluster_mfccs_result[i]) - np.array(posterior_result[i]))<0.0001 ).all())
+    # show all 
+    # for i in range(len(index)):
+    #     plt.subplot(4,11,i+1)
+    #     plt.title("{}".format(i))
+    #     # plt.imshow(cluster_mfccs_result[i])
+    #     # plt.imshow(posterior_result[i])
+    #     plt.plot(posterior_result[i])
+    #     plt.axis('off')
+    # plt.show()
 
-    for i in range(len(index)):
-        plt.subplot(2,22,i+1)
-        plt.title("{}".format(i))
-        # plt.imshow(cluster_mfccs_result[i])
-        plt.imshow(posterior_result[i])
-        plt.axis('off')
+    digit = ['oh','0','1','2','3','4','5','6','7','8','9']
+    d_ind = [ 0  , 1 , 2 , 3 , 4 , 5 , 6 , 7 , 8 , 9 , 10]
+    print_index = 5
+
+    # show the same digit      
+    # for i in range(4):
+    #     plt.subplot(2,2,i+1)
+    #     subject = (print_index)*2+ math.floor(i/2) *22+i%2
+    #     plt.title("{}".format(subject))
+    #     plt.plot(posterior_result[subject])
+    #     # plt.imshow(posterior_result[subject])
+    #     # plt.pcolormesh(posterior_result[subject])
+    #     # plt.axis('off')
+    # plt.show()
+    
+    # show two different digits    
+    print1 = [ 7,7,8,8]
+    for i in range(4):
+        plt.subplot(2,2,i+1)
+        subject = (print1[i])*2+ +i%2
+        plt.title("{}".format(subject))
+        plt.plot(posterior_result[subject])
+        # plt.imshow(posterior_result[subject])
+        # plt.pcolormesh(posterior_result[subject])
+        # plt.axis('off')
     plt.show()
