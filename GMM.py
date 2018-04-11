@@ -36,17 +36,19 @@ if __name__== "__main__":
         # original mfcc
         mfcc_orignal.append(mfcc)
 
-    g = GaussianMixture(n_components=32)
+    g = GaussianMixture(n_components=4)
     # Generate random observations w
     g.fit(mfccs)
 
     # calculate the posterior(whole matrix)
     resp = g.predict_proba(mfccs).tolist()
+    # resp = g.predict(mfccs).tolist()
 
     # calculate the posterior(one by one)
     posterior_result = []
     for i in range(len(index)):
         r = g.predict_proba(mfcc_orignal[i]).tolist()
+        # r = g.predict(mfcc_orignal[i]).tolist()
         posterior_result.append(r)
 
     cluster_mfccs_result = []
@@ -71,27 +73,28 @@ if __name__== "__main__":
 
     digit = ['oh','0','1','2','3','4','5','6','7','8','9']
     d_ind = [ 0  , 1 , 2 , 3 , 4 , 5 , 6 , 7 , 8 , 9 , 10]
-    print_index = 5
+    print_index = 4
 
     # show the same digit      
-    # for i in range(4):
-    #     plt.subplot(2,2,i+1)
-    #     subject = (print_index)*2+ math.floor(i/2) *22+i%2
+    for i in range(4):
+        plt.subplot(2,2,i+1)
+        subject = (print_index)*2+ math.floor(i/2) *22+i%2
+        plt.title("{}".format(subject))
+        plt.plot(posterior_result[subject])
+        # plt.legend(range(len(posterior_result[subject])))
+        # plt.imshow(posterior_result[subject])
+        # plt.pcolormesh(posterior_result[subject])
+        # plt.axis('off')
+    plt.show()
+    
+    # show two different digits    
+    # print1 = [4,4,5,5,6,6,7,7]
+    # for i in range(8):
+    #     plt.subplot(4,2,i+1)
+    #     subject = (print1[i])*2+ +i%2
     #     plt.title("{}".format(subject))
     #     plt.plot(posterior_result[subject])
     #     # plt.imshow(posterior_result[subject])
     #     # plt.pcolormesh(posterior_result[subject])
     #     # plt.axis('off')
     # plt.show()
-    
-    # show two different digits    
-    print1 = [ 7,7,8,8]
-    for i in range(4):
-        plt.subplot(2,2,i+1)
-        subject = (print1[i])*2+ +i%2
-        plt.title("{}".format(subject))
-        plt.plot(posterior_result[subject])
-        # plt.imshow(posterior_result[subject])
-        # plt.pcolormesh(posterior_result[subject])
-        # plt.axis('off')
-    plt.show()
