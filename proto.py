@@ -65,8 +65,8 @@ def enframe(samples, winlen, winshift):
     Slices the input samples into overlapping windows.
 
     Args:
-        winlen: window length in samples. 长度
-        winshift: shift of consecutive windows in samples 重复数
+        winlen: window length in samples. 长度 20ms
+        winshift: shift of consecutive windows in samples 重复数 10ms
     Returns:
         numpy array [N x winlen], where N is the number of windows that fit
         in the input signal
@@ -78,13 +78,13 @@ def enframe(samples, winlen, winshift):
         temp = samples[0:winlen]
         N=N+1
         while(True):
+            # compute start and end indexes
             end = winlen + N*(winlen-winshift)
             start = end-winlen
+            # if it exceeds the total length, drop the last part
             if(end > samples_len):
-                # drop the last part
-                # last = np.hstack((samples[start:],np.zeros(winlen-(samples_len-start))))
-                # temp = np.vstack((temp,last))
                 break
+            # if it's not the last part, append the window to the array
             temp = np.vstack((temp, samples[start:end]))
             N=N+1
     else:
@@ -105,11 +105,16 @@ def preemp(input, p=0.97):
     Note (you can use the function lfilter from scipy.signal)
     """
     preemph = np.zeros(input.shape[1])
+    # a = [1,0,0,...,0]
     a = np.zeros(input.shape[1])
     a[0]=1
+    # b = [1,-p,0,0,...,0]
     b = np.zeros(input.shape[1])
     b[0]=1
     b[1] = -p
+    # y[n] = x[n] − αx[n − 1]
+    # lfilter: a[0]*y[n] = b[0]*x[n] + b[1]*x[n-1] + ... + b[M]*x[n-M] - a[1]*y[n-1] - ... - a[N]*y[n-N]
+    # so, 1*y[n] = 1*x[n] + (-p)*x[n-1]
     for i in range(input.shape[0]):
         # a = 0 IIR -> FIR
         sig = lfilter(b, a, input[i],axis=-1, zi=None)
@@ -130,7 +135,7 @@ def windowing(input):
     """
     window = hamming(input.shape[1],sym=False)
 
-    # plot the window
+    # plot the window shape
     # plt.plot(window)
     # plt.show()
 
@@ -203,7 +208,7 @@ def cepstrum(input, nceps):
     return ceps
 
 
-def dtw(x, y):
+def dtw(x, y, dist):
     """Dynamic Time Warping.
 
     Args:
@@ -242,7 +247,3 @@ def dtw(x, y):
             accD[h][k] = locD[h][k] + min(accD[h - 1][k], accD[h - 1][k - 1], accD[h][k - 1])
 
     return accD[accD.shape[0]-1][accD.shape[1]-1]
-
-def dist(vector1,vector2):
-    d = np.linalg.norm(vector1-vector2)
-    return d

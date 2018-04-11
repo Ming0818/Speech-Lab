@@ -11,7 +11,7 @@ def getData():
         for j in range(data.shape[0]):
             mfccs_i = proto.mfcc(data[i]['samples'])
             mfccs_j = proto.mfcc(data[j]['samples'])
-            globalD[i][j] = proto.dtw(mfccs_i, mfccs_j)
+            globalD[i][j] = proto.dtw(mfccs_i, mfccs_j, dist=lambda mfccs_i, mfccs_j: np.linalg.norm(mfccs_i - mfccs_j))
             # print(globalD[i][j])
     np.savetxt('distance', globalD)
 
