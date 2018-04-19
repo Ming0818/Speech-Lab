@@ -24,52 +24,29 @@ def concatHMMs(hmmmodels, namelist):
     Example:
        wordHMMs['o'] = concatHMMs(phoneHMMs, ['sil', 'ow', 'sil'])
     """
-    
-    def concatHMMs(hmmmodels, namelist):
-        """ Concatenates HMM models in a left to right manner
-    
-        Args:
-           hmmmodels: list of dictionaries with the following keys:
-               name: phonetic or word symbol corresponding to the model
-               startprob: M+1 array with priori probability of state
-               transmat: (M+1)x(M+1) transition matrix
-               means: MxD array of mean vectors
-               covars: MxD array of variances
-           namelist: list of model names that we want to concatenate
-    
-        D is the dimension of the feature vectors
-        M is the number of states in each HMM model (could be different for each)
-    
-        Output
-           combinedhmm: dictionary with the same keys as the input but
-                        combined models
-    
-        Example:
-           wordHMMs['o'] = concatHMMs(phoneHMMs, ['sil', 'ow', 'sil'])
-        """
-        new_H = {}
-        # M = 3, D = 13
-        M = phoneHMMs['sil']['means'].shape[0]
-        D = phoneHMMs['sil']['means'].shape[1]
-        num_tran = phoneHMMs['sil']['transmat'].shape[0]
+    new_H = {}
+    # M = 3, D = 13
+    M = phoneHMMs['sil']['means'].shape[0]
+    D = phoneHMMs['sil']['means'].shape[1]
+    num_tran = phoneHMMs['sil']['transmat'].shape[0]
 
-        # 数量
-        pho_num = len(namelist)
+    # 数量
+    pho_num = len(namelist)
 
-        new_trans = np.zeros((pho_num *(M+1)-2,pho_num *(M+1)-2))
-        new_means = np.zeros((M * pho_num, D))
-        new_covars = np.zeros(new_means.shape)
+    new_trans = np.zeros((pho_num *(M+1)-2,pho_num *(M+1)-2))
+    new_means = np.zeros((M * pho_num, D))
+    new_covars = np.zeros(new_means.shape)
 
-        for i in range(pho_num):
-            hmm = phoneHMMs[namelist[i]]
-            new_trans[i*M:i*M+num_tran, i*M:i*M+num_tran] = hmm['transmat']
-            new_means[i*M:(i+1)*M] = hmm['means']
-            new_covars[i*M:(i+1)*M] = hmm['covars']
-        new_H.update({'transmat':new_trans})
-        new_H.update({'means': new_means})
-        new_H.update({'covars':new_covars})
+    for i in range(pho_num):
+        hmm = phoneHMMs[namelist[i]]
+        new_trans[i*M:i*M+num_tran, i*M:i*M+num_tran] = hmm['transmat']
+        new_means[i*M:(i+1)*M] = hmm['means']
+        new_covars[i*M:(i+1)*M] = hmm['covars']
+    new_H.update({'transmat':new_trans})
+    new_H.update({'means': new_means})
+    new_H.update({'covars':new_covars})
 
-        return new_H
+    return new_H
 
 
 def gmmloglik(log_emlik, weights):
