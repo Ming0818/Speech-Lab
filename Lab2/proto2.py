@@ -148,3 +148,22 @@ def updateMeanAndVar(X, log_gamma, varianceFloor=5.0):
          means: MxD mean vectors for each state
          covars: MxD covariance (variance) vectors for each state
     """
+
+
+if __name__== "__main__":
+    data = np.load('lab2_data.npz')['data']
+    phoneHMMs = np.load('lab2_models.npz')['phoneHMMs'].item()
+    list(sorted(phoneHMMs.keys()))
+    phoneHMMs['ah'].keys()
+
+    example = np.load('lab2_example.npz')['example'].item()
+    list(example.keys())
+
+    prondict = prondict_list()
+
+    modellist = {}
+    for digit in prondict.keys():
+        modellist[digit] = ['sil'] + prondict[digit] + ['sil']
+
+    wordHMMs = {}
+    wordHMMs['o'] = concatHMMs(phoneHMMs, modellist['o'])
