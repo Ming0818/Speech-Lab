@@ -23,29 +23,6 @@ def concatHMMs(hmmmodels, namelist):
     Example:
        wordHMMs['o'] = concatHMMs(phoneHMMs, ['sil', 'ow', 'sil'])
     """
-    
-    def concatHMMs(hmmmodels, namelist):
-    """ Concatenates HMM models in a left to right manner
-
-    Args:
-       hmmmodels: list of dictionaries with the following keys:
-           name: phonetic or word symbol corresponding to the model
-           startprob: M+1 array with priori probability of state
-           transmat: (M+1)x(M+1) transition matrix
-           means: MxD array of mean vectors
-           covars: MxD array of variances
-       namelist: list of model names that we want to concatenate
-
-    D is the dimension of the feature vectors
-    M is the number of states in each HMM model (could be different for each)
-
-    Output
-       combinedhmm: dictionary with the same keys as the input but
-                    combined models
-
-    Example:
-       wordHMMs['o'] = concatHMMs(phoneHMMs, ['sil', 'ow', 'sil'])
-    """
     new_H = {}
     # M = 3, D = 13
     M = phoneHMMs['sil']['means'].shape[0]
