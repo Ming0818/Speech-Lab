@@ -78,15 +78,14 @@ def forward(log_emlik, log_startprob, log_transmat):
     Output:
         forward_prob: NxM array of forward log probabilities for each of the M states in the model
     """
-    N = log_emlik.shape[0]  # 71
-    M = log_emlik.shape[1]  # 9
+    N, M = log_emlik.shape  # 71, 9
     logalpha = np.zeros(log_emlik.shape)
     for n in range(N):
         for j in range(M):
             if n == 0:
                 logalpha[n, j] = log_startprob[j] + log_emlik[n, j]
             else:
-                logalpha[n, j] = logsumexp(logalpha[n-1]+log_transmat.T[j, 0:M]) + log_emlik[n, j]
+                logalpha[n, j] = logsumexp(logalpha[n-1, :]+log_transmat[0:M, j]) + log_emlik[n, j]
     return logalpha
 
 
@@ -101,6 +100,12 @@ def backward(log_emlik, log_startprob, log_transmat):
     Output:
         backward_prob: NxM array of backward log probabilities for each of the M states in the model
     """
+    N, M = log_emlik.shape  # 71, 9
+    logbeta = np.zeros(log_emlik.shape)
+    for n in range(N-2, -1, -1):
+        for i in range(M):
+            logbeta[n, i] = logsumexp(log_transmat[i, 0:M] + log_emlik[n+1, :] + logbeta[n+1, :])
+    return logbeta
 
 def viterbi(log_emlik, log_startprob, log_transmat):
     """Viterbi path.
@@ -171,14 +176,24 @@ if __name__== "__main__":
     # plt.show()
 
     # 4.2 forward algorithm
-    verify = example['logalpha']
-    result = forward(example['obsloglik'], np.log(wordHMMs['o']['startprob']), np.log(wordHMMs['o']['transmat']))
+    # verify = example['logalpha']
+    # result = forward(example['obsloglik'], np.log(wordHMMs['o']['startprob']), np.log(wordHMMs['o']['transmat']))
+    # print((verify == result).all())
+    # result[np.isneginf(result)] = 0
+    #
+    # plt.pcolormesh(result.T)
+    # plt.show()
+    # verify1 = example['loglik']
+    # N = result.shape[0]
+    # # M = result.shape[1]
+    # result1 = logsumexp(result[N-1])
+    # print((verify1 == result1).all())
+
+    # 4.4 backward algorithm
+    verify = example['logbeta']
+    result = backward(example['obsloglik'], np.log(wordHMMs['o']['startprob']), np.log(wordHMMs['o']['transmat']))
     print((verify == result).all())
 
-    # plt.imshow(result.T)
-    # plt.show()
-    verify1 = example['loglik']
-    N = result.shape[0]
-    # M = result.shape[1]
-    result1 = logsumexp(result[N-1])
-    print((verify1 == result1).all())
+    result[np.isneginf(result)] = 0
+    plt.pcolormesh(result.T)
+    plt.show()
