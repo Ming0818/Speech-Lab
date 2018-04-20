@@ -84,9 +84,9 @@ def forward(log_emlik, log_startprob, log_transmat):
     for n in range(N):
         for j in range(M):
             if n == 0:
-                logalpha[n][j] = log_startprob[j] + log_emlik[n][j]
+                logalpha[n, j] = log_startprob[j] + log_emlik[n, j]
             else:
-                logalpha[n][j] = logsumexp(logalpha[n-1]+log_transmat.T[j][0:M]) + log_emlik[n][j]
+                logalpha[n, j] = logsumexp(logalpha[n-1]+log_transmat.T[j, 0:M]) + log_emlik[n, j]
     return logalpha
 
 
@@ -173,10 +173,12 @@ if __name__== "__main__":
     # 4.2 forward algorithm
     verify = example['logalpha']
     result = forward(example['obsloglik'], np.log(wordHMMs['o']['startprob']), np.log(wordHMMs['o']['transmat']))
-    print((abs(verify - result) < 0.0000001).all())
-    # 这个不知道是不是有inf值的关系 没法比较 然后pcolormesh打不出来 所以用了imshow
-    # plt.subplot(2, 1, 1)
-    # plt.imshow(verify.T)
-    # plt.subplot(2, 1, 2)
-    plt.imshow(result.T)
-    plt.show()
+    print((verify == result).all())
+
+    # plt.imshow(result.T)
+    # plt.show()
+    verify1 = example['loglik']
+    N = result.shape[0]
+    # M = result.shape[1]
+    result1 = logsumexp(result[N-1])
+    print((verify1 == result1).all())
