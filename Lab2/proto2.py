@@ -1,10 +1,4 @@
-import numpy as np
 from tools2 import *
-from prondict import *
-from sklearn.mixture import *
-import matplotlib.pyplot as plt
-from proto2 import *
-import math
 
 def concatHMMs(hmmmodels, namelist):
     """ Concatenates HMM models in a left to right manner
@@ -169,60 +163,3 @@ def updateMeanAndVar(X, log_gamma, varianceFloor=5.0):
          means: MxD mean vectors for each state
          covars: MxD covariance (variance) vectors for each state
     """
-
-
-if __name__== "__main__":
-    data = np.load('data/lab2_data.npz')['data']
-    phoneHMMs = np.load('data/lab2_models.npz')['phoneHMMs'].item()
-    list(sorted(phoneHMMs.keys()))
-    phoneHMMs['ah'].keys()
-
-    example = np.load('data/lab2_example.npz')['example'].item()
-    list(example.keys())
-
-    prondict = prondict_list()
-
-    modellist = {}
-    for digit in prondict.keys():
-        modellist[digit] = ['sil'] + prondict[digit] + ['sil']
-
-    wordHMMs = {}
-    wordHMMs['o'] = concatHMMs(phoneHMMs, modellist['o'])
-
-    # 4.1 Gaussian emission probabilities
-    verify_obs = example['obsloglik']
-    result_obs = log_multivariate_normal_density_diag(example['lmfcc'], wordHMMs['o']['means'], wordHMMs['o']['covars'])
-    # print((abs(verify_obs - result_obs) < 0.0000001).all())
-    # plt.pcolormesh(result_obs.T)
-    # plt.show()
-
-    # 4.2 forward algorithm
-    verify_log = example['logalpha']
-    result_log = forward(example['obsloglik'], np.log(wordHMMs['o']['startprob']), np.log(wordHMMs['o']['transmat']))
-    # print((verify_log == result_log).all())
-    # plt.subplot(2,1,1)
-    # plt.imshow(result_log.T)
-    # plt.subplot(2,1,2)
-    # plt.imshow(verify_log.T)
-    # plt.show()
-
-    # 4.2 verify with example['lmfcc']
-    # verify_loglik = example['loglik']
-    # result_loglik = forward(result_obs, np.log(wordHMMs['o']['startprob']), np.log(wordHMMs['o']['transmat']))
-    # N,M = result_loglik.shape
-    # re_loglik = logsumexp(result_loglik[N-1])
-    # print((abs(verify_loglik - re_loglik)<0.0000001).all())
-
-    # 4.3 Viterbi Approximation
-    verify_vlog = example['vloglik']
-    result_vlog = viterbi(example['obsloglik'], np.log(wordHMMs['o']['startprob']), np.log(wordHMMs['o']['transmat']))
-    print((verify_vlog[0] == result_vlog[0]).all())
-    print((verify_vlog[1] == result_vlog[1]).all())
-    # 4.4 backward Function
-    # verify_logbeta = example['logbeta']
-    # result_logbeta = backward(result_obs, np.log(wordHMMs['o']['startprob']), np.log(wordHMMs['o']['transmat']))
-    # print((abs(verify_logbeta - result_logbeta)<0.0000001).all())
-    # result_logbeta[np.isneginf(result_logbeta)] = 0
-    # plt.pcolormesh(result_logbeta.T)
-    # plt.show()
-
