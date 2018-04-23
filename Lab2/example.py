@@ -36,7 +36,7 @@ if __name__== "__main__":
     # 4.2 forward algorithm
     verify_log = example['logalpha']
     result_log = forward(result_obs, np.log(wordHMMs['o']['startprob']), np.log(wordHMMs['o']['transmat']))
-    print((verify_log == result_log).all())
+    print((abs(verify_log == result_log) < 0.0000001).all())
 
     result_log[np.isneginf(result_log)] = 0
     plt.subplot(imageN, 1, 2)
@@ -44,10 +44,11 @@ if __name__== "__main__":
     plt.xticks([])
     plt.pcolormesh(result_log.T)
 
-    # 4.2 verify with example['lmfcc']
+    # 4.2 forward likelihood P(X|θ) of the whole sequence
     N,M = result_log.shape
-    re_loglik = logsumexp(result_log[N-1])
-    print((abs(result_log - re_loglik)<0.0000001).all())
+    result_loglik = logsumexp(result_log[N-1])
+    verify_loglik = example['loglik']
+    print(abs(verify_loglik - result_loglik)<0.0000001)
 
     # 4.3 Viterbi Approximation
     verify_vlog = example['vloglik']
@@ -71,4 +72,11 @@ if __name__== "__main__":
     plt.title("backward algorithm", fontsize=10)
     plt.xticks([])
     plt.pcolormesh(result_logbeta.T)
-    plt.show()
+    # plt.show()
+
+    # 4.4 backward likelihood P(X|θ) of the whole sequence
+    N, M = result_logbeta.shape
+    a = np.sum(np.log(wordHMMs['o']['transmat'][0:1,0:M]), axis=0)
+    result_logbetalik = logsumexp(result_logbeta[0]+result_obs[1]+a)
+    verify_loglik = example['loglik']
+    print(abs(verify_loglik - result_logbetalik) < 0.0000001)
