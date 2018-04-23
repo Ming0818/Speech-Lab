@@ -3,6 +3,8 @@ from tools2 import *
 from prondict import *
 from sklearn.mixture import *
 import matplotlib.pyplot as plt
+from proto2 import *
+import math
 
 def concatHMMs(hmmmodels, namelist):
     """ Concatenates HMM models in a left to right manner
@@ -38,8 +40,8 @@ def concatHMMs(hmmmodels, namelist):
     new_trans = np.zeros((pho_num *(M+1)-2,pho_num *(M+1)-2))
     new_means = np.zeros((M * pho_num, D))
     new_covars = np.zeros(new_means.shape)
-    new_startprob = np.zeros(pho_num*3)
-    new_startprob[0] = 1.0
+    new_startprob = np.zeros(pho_num* M)
+    new_startprob[0] = 1
 
     for i in range(pho_num):
         hmm = hmmmodels[namelist[i]]
@@ -78,14 +80,16 @@ def forward(log_emlik, log_startprob, log_transmat):
     Output:
         forward_prob: NxM array of forward log probabilities for each of the M states in the model
     """
-    N, M = log_emlik.shape  # 71, 9
+    N = log_emlik.shape[0]  # 71
+    M = log_emlik.shape[1]  # 9
     logalpha = np.zeros(log_emlik.shape)
     for n in range(N):
         for j in range(M):
             if n == 0:
-                logalpha[n, j] = log_startprob[j] + log_emlik[n, j]
+                logalpha[n,j] = log_startprob[j] + log_emlik[n,j]
             else:
-                logalpha[n, j] = logsumexp(logalpha[n-1, :]+log_transmat[0:M, j]) + log_emlik[n, j]
+                logalpha[n,j] = logsumexp(logalpha[n-1]+log_transmat[0:M, j]) + log_emlik[n,j]
+            #   logalpha[n,j] = logsumexp(logalpha[n-1]+log_transmat.T[j][0:M]) + log_emlik[n][j]
     return logalpha
 
 
@@ -119,6 +123,26 @@ def viterbi(log_emlik, log_startprob, log_transmat):
         viterbi_loglik: log likelihood of the best path
         viterbi_path: best path
     """
+    N,M = log_emlik.shape #N frames, M states
+    viterbi_path = np.zeros([N],dtype=int)
+    V = np.zeros([N,M])
+    B = np.zeros([N,M])
+
+    for i in range(M):
+        V[0,i] = log_startprob[i] + log_emlik[0,i]
+
+    for t in range(1,N):
+        for j in range(M):
+            V[t,j] = np.max( V[t-1,:] + log_transmat[0:M,j]) + log_emlik[t,j]
+            B[t,j] = np.argmax(V[t-1,:] + log_transmat[0:M, j])
+
+    viterbi_loglik = np.max(V[N-1,:])
+    viterbi_path[N-1] = np.argmax( V[N-1,:])
+
+    for t in range(N-1)[::-1]:
+        viterbi_path[t] = B[t+1, viterbi_path[t+1]]
+    
+    return viterbi_loglik,viterbi_path
 
 def statePosteriors(log_alpha, log_beta):
     """State posterior (gamma) probabilities in log domain.
@@ -168,32 +192,41 @@ if __name__== "__main__":
     wordHMMs['o'] = concatHMMs(phoneHMMs, modellist['o'])
 
     # 4.1 Gaussian emission probabilities
-    # verify = example['obsloglik']
-    # result = log_multivariate_normal_density_diag(example['lmfcc'], wordHMMs['o']['means'], wordHMMs['o']['covars'])
-    # print((abs(verify - result) < 0.0000001).all())
-    #
-    # plt.pcolormesh(result.T)
+    verify_obs = example['obsloglik']
+    result_obs = log_multivariate_normal_density_diag(example['lmfcc'], wordHMMs['o']['means'], wordHMMs['o']['covars'])
+    # print((abs(verify_obs - result_obs) < 0.0000001).all())
+    # plt.pcolormesh(result_obs.T)
     # plt.show()
 
     # 4.2 forward algorithm
-    # verify = example['logalpha']
-    # result = forward(example['obsloglik'], np.log(wordHMMs['o']['startprob']), np.log(wordHMMs['o']['transmat']))
-    # print((verify == result).all())
-    # result[np.isneginf(result)] = 0
-    #
-    # plt.pcolormesh(result.T)
+    verify_log = example['logalpha']
+    result_log = forward(example['obsloglik'], np.log(wordHMMs['o']['startprob']), np.log(wordHMMs['o']['transmat']))
+    # print((verify_log == result_log).all())
+    # plt.subplot(2,1,1)
+    # plt.imshow(result_log.T)
+    # plt.subplot(2,1,2)
+    # plt.imshow(verify_log.T)
     # plt.show()
-    # verify1 = example['loglik']
-    # N = result.shape[0]
-    # # M = result.shape[1]
-    # result1 = logsumexp(result[N-1])
-    # print((verify1 == result1).all())
 
-    # 4.4 backward algorithm
-    verify = example['logbeta']
-    result = backward(example['obsloglik'], np.log(wordHMMs['o']['startprob']), np.log(wordHMMs['o']['transmat']))
-    print((verify == result).all())
+    # 4.2 verify with example['lmfcc']
+    verify_loglik = example['loglik']
+    result_loglik = forward(result_obs, np.log(wordHMMs['o']['startprob']), np.log(wordHMMs['o']['transmat']))
+    N,M = result_loglik.shape
+    re_loglik = logsumexp(result_loglik[N-1])
+    # print((abs(verify_loglik - re_loglik)<0.0000001).all())
 
-    result[np.isneginf(result)] = 0
-    plt.pcolormesh(result.T)
+    # # 4.3 Viterbi Approximation
+    verify_vlog = example['vloglik']
+    result_vlog = viterbi(result_obs, wordHMMs['o']['startprob'], np.log(wordHMMs['o']['transmat']))
+    print((verify_vlog[0] == result_vlog[0]).all())
+
+    # 4.4 backward Function
+    verify_logbeta = example['logbeta']
+    result_logbeta = backward(result_obs, np.log(wordHMMs['o']['startprob']), np.log(wordHMMs['o']['transmat']))
+    print((abs(verify_logbeta - result_logbeta)<0.0000001).all())
+    # result_logbeta = backward(example['obsloglik'], np.log(wordHMMs['o']['startprob']), np.log(wordHMMs['o']['transmat']))
+    # print((verify_logbeta == result_logbeta).all())
+    result_logbeta[np.isneginf(result_logbeta)] = 0
+    plt.pcolormesh(result_logbeta.T)
     plt.show()
+
