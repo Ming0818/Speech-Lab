@@ -29,7 +29,7 @@ if __name__== "__main__":
     print((abs(verify_obs - result_obs) < 0.0000001).all())
 
     plt.subplot(imageN, 1, 1)
-    plt.title("obsloglik")
+    plt.title("obsloglik", fontsize=10)
     plt.xticks([])
     plt.pcolormesh(result_obs.T)
 
@@ -40,7 +40,7 @@ if __name__== "__main__":
 
     result_log[np.isneginf(result_log)] = 0
     plt.subplot(imageN, 1, 2)
-    plt.title("forward algorithm")
+    plt.title("forward algorithm", fontsize=10)
     plt.xticks([])
     plt.pcolormesh(result_log.T)
 
@@ -56,7 +56,7 @@ if __name__== "__main__":
     print((verify_vlog[1] == result_path).all())
 
     plt.subplot(imageN, 1, 3)
-    plt.title("viterbi algorithm")
+    plt.title("viterbi algorithm", fontsize=10)
     plt.xticks([])
     plt.pcolormesh(result_log.T)
     plt.plot(result_path, color = 'white')
@@ -68,7 +68,7 @@ if __name__== "__main__":
 
     result_logbeta[np.isneginf(result_logbeta)] = 0
     plt.subplot(imageN, 1, 4)
-    plt.title("backward algorithm")
+    plt.title("backward algorithm", fontsize=10)
     plt.xticks([])
     plt.pcolormesh(result_logbeta.T)
     plt.show()

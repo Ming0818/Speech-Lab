@@ -21,14 +21,25 @@ if __name__== "__main__":
 
     utterances = []
     u_index = []
+    # forward
+    # for i in range(data.shape[0]):
+    #     ut = []
+    #     for digit in wordHMMs.keys():
+    #         result_obs = log_multivariate_normal_density_diag(data[i]['lmfcc'], wordHMMs[digit]['means'], wordHMMs[digit]['covars'])
+    #         result_loglik = forward(result_obs, np.log(wordHMMs[digit]['startprob']), np.log(wordHMMs[digit]['transmat']))
+    #         N, M = result_loglik.shape
+    #         re_loglik = logsumexp(result_loglik[N - 1])
+    #         ut.append(re_loglik)
+    #     utterances.append(ut)
+    #     u_index.append(ut.index(max(ut)))
+    # print(u_index)
+
+    # viterbi
     for i in range(data.shape[0]):
         ut = []
         for digit in wordHMMs.keys():
             result_obs = log_multivariate_normal_density_diag(data[i]['lmfcc'], wordHMMs[digit]['means'], wordHMMs[digit]['covars'])
-            result_loglik = forward(result_obs, np.log(wordHMMs[digit]['startprob']), np.log(wordHMMs[digit]['transmat']))
-            N, M = result_loglik.shape
-            re_loglik = logsumexp(result_loglik[N - 1])
-            ut.append(re_loglik)
-        utterances.append(ut)
+            result_loglik, path = viterbi(result_obs, np.log(wordHMMs[digit]['startprob']), np.log(wordHMMs[digit]['transmat']))
+            ut.append(result_loglik)
         u_index.append(ut.index(max(ut)))
     print(u_index)
