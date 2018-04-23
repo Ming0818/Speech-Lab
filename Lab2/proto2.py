@@ -80,16 +80,14 @@ def forward(log_emlik, log_startprob, log_transmat):
     Output:
         forward_prob: NxM array of forward log probabilities for each of the M states in the model
     """
-    N = log_emlik.shape[0]  # 71
-    M = log_emlik.shape[1]  # 9
+    N, M = log_emlik.shape  # 71, 9
     logalpha = np.zeros(log_emlik.shape)
     for n in range(N):
         for j in range(M):
             if n == 0:
-                logalpha[n,j] = log_startprob[j] + log_emlik[n,j]
+                logalpha[n, j] = log_startprob[j] + log_emlik[n, j]
             else:
-                logalpha[n,j] = logsumexp(logalpha[n-1]+log_transmat[0:M, j]) + log_emlik[n,j]
-            #   logalpha[n,j] = logsumexp(logalpha[n-1]+log_transmat.T[j][0:M]) + log_emlik[n][j]
+                logalpha[n, j] = logsumexp(logalpha[n-1, :]+log_transmat[0:M, j]) + log_emlik[n, j]
     return logalpha
 
 
@@ -123,7 +121,7 @@ def viterbi(log_emlik, log_startprob, log_transmat):
         viterbi_loglik: log likelihood of the best path
         viterbi_path: best path
     """
-    N,M = log_emlik.shape #N frames, M states
+    N, M = log_emlik.shape  # N frames, M states
     viterbi_path = np.zeros([N],dtype=int)
     V = np.zeros([N,M])
     B = np.zeros([N,M])
@@ -133,16 +131,16 @@ def viterbi(log_emlik, log_startprob, log_transmat):
 
     for t in range(1,N):
         for j in range(M):
-            V[t,j] = np.max( V[t-1,:] + log_transmat[0:M,j]) + log_emlik[t,j]
+            V[t,j] = np.max(V[t-1,:] + log_transmat[0:M, j]) + log_emlik[t,j]
             B[t,j] = np.argmax(V[t-1,:] + log_transmat[0:M, j])
 
     viterbi_loglik = np.max(V[N-1,:])
     viterbi_path[N-1] = np.argmax( V[N-1,:])
 
-    for t in range(N-1)[::-1]:
+    for t in range(N-2, -1, -1):
         viterbi_path[t] = B[t+1, viterbi_path[t+1]]
     
-    return viterbi_loglik,viterbi_path
+    return viterbi_loglik, viterbi_path
 
 def statePosteriors(log_alpha, log_beta):
     """State posterior (gamma) probabilities in log domain.
@@ -209,24 +207,22 @@ if __name__== "__main__":
     # plt.show()
 
     # 4.2 verify with example['lmfcc']
-    verify_loglik = example['loglik']
-    result_loglik = forward(result_obs, np.log(wordHMMs['o']['startprob']), np.log(wordHMMs['o']['transmat']))
-    N,M = result_loglik.shape
-    re_loglik = logsumexp(result_loglik[N-1])
+    # verify_loglik = example['loglik']
+    # result_loglik = forward(result_obs, np.log(wordHMMs['o']['startprob']), np.log(wordHMMs['o']['transmat']))
+    # N,M = result_loglik.shape
+    # re_loglik = logsumexp(result_loglik[N-1])
     # print((abs(verify_loglik - re_loglik)<0.0000001).all())
 
-    # # 4.3 Viterbi Approximation
+    # 4.3 Viterbi Approximation
     verify_vlog = example['vloglik']
-    result_vlog = viterbi(result_obs, wordHMMs['o']['startprob'], np.log(wordHMMs['o']['transmat']))
+    result_vlog = viterbi(example['obsloglik'], np.log(wordHMMs['o']['startprob']), np.log(wordHMMs['o']['transmat']))
     print((verify_vlog[0] == result_vlog[0]).all())
-
+    print((verify_vlog[1] == result_vlog[1]).all())
     # 4.4 backward Function
-    verify_logbeta = example['logbeta']
-    result_logbeta = backward(result_obs, np.log(wordHMMs['o']['startprob']), np.log(wordHMMs['o']['transmat']))
-    print((abs(verify_logbeta - result_logbeta)<0.0000001).all())
-    # result_logbeta = backward(example['obsloglik'], np.log(wordHMMs['o']['startprob']), np.log(wordHMMs['o']['transmat']))
-    # print((verify_logbeta == result_logbeta).all())
-    result_logbeta[np.isneginf(result_logbeta)] = 0
-    plt.pcolormesh(result_logbeta.T)
-    plt.show()
+    # verify_logbeta = example['logbeta']
+    # result_logbeta = backward(result_obs, np.log(wordHMMs['o']['startprob']), np.log(wordHMMs['o']['transmat']))
+    # print((abs(verify_logbeta - result_logbeta)<0.0000001).all())
+    # result_logbeta[np.isneginf(result_logbeta)] = 0
+    # plt.pcolormesh(result_logbeta.T)
+    # plt.show()
 
