@@ -7,13 +7,16 @@ Mengdi Xue mengdix@kth.se
 ## Overall process
 
 The overall process is as the following figure:
-<img src="https://github.com/Celiali/Speech-lab1-MFCC/blob/master/Lab1/figure/process.png" width=500/>
+
+<img src="https://github.com/Celiali/Speech-lab1-MFCC/blob/master/Lab1/figure/process.png" width=300/>
 
 The signal:
-![](https://github.com/Celiali/Speech-lab1-MFCC/blob/master/Lab1/figure/signal.png)
+
+<img src="https://github.com/Celiali/Speech-lab1-MFCC/blob/master/Lab1/figure/signal.png" width=600/>
 
 ## 4.1 enframe
-![](https://github.com/Celiali/Speech-lab1-MFCC/blob/master/Lab1/figure/enframe2.png)
+
+<img src="https://github.com/Celiali/Speech-lab1-MFCC/blob/master/Lab1/figure/enframe2.png" width=600/>
 
 Data.samplingrate= 20000 Hz. 
 
@@ -23,7 +26,7 @@ The shift is 10 ms, the number of overlap signal in one window is 20kHz * 10 ms 
 
 ## 4.2 Pre-emphasis
 
-![](https://github.com/Celiali/Speech-lab1-MFCC/blob/master/Lab1/figure/preemp2.png)
+<img src="https://github.com/Celiali/Speech-lab1-MFCC/blob/master/Lab1/figure/preemp2.png" width=600/>
 
 The lfilter function in scipy.signal:
 
@@ -43,7 +46,8 @@ b is an array with the length of input signal, and b[0] is 1, b[1] is -0.97, oth
 Pre-emphasis is similar as a high frequency filter in order to highlight the high frequency part which is suppressed by the pronunciation system.
 
 ## 4.3 windowing
-![](https://github.com/Celiali/Speech-lab1-MFCC/blob/master/Lab1/figure/window.png)
+
+<img src="https://github.com/Celiali/Speech-lab1-MFCC/blob/master/Lab1/figure/window.png" width=400/>
 
 The reason why this windowing should be applied to the frames of speech signal:
 
@@ -53,30 +57,38 @@ The reason why this windowing should be applied to the frames of speech signal:
 
 after windowing:
 
-![](https://github.com/Celiali/Speech-lab1-MFCC/blob/master/Lab1/figure/afterwindow.png)
+<img src="https://github.com/Celiali/Speech-lab1-MFCC/blob/master/Lab1/figure/afterwindow.png" width=600/>
 
 ## 4.4 FFT
-![](https://github.com/Celiali/Speech-lab1-MFCC/blob/master/Lab1/figure/FFT2.png)
+
+<img src="https://github.com/Celiali/Speech-lab1-MFCC/blob/master/Lab1/figure/FFT2.png" width=600/>
 
 According to Sampling Theorem:
 F_max = Samplingrate /2 (10kHz) in order to avoid spectral aliasing
 
 ## 4.5 Mel filterbank log spectrum
-![](https://github.com/Celiali/Speech-lab1-MFCC/blob/master/Lab1/figure/trfbank.png)
+
+<img src="https://github.com/Celiali/Speech-lab1-MFCC/blob/master/Lab1/figure/trfbank.png" width=600/>
 
 The distribution of the filters along the frequency axis:
 There are totally 40 filters. From the distribution we can see that there are more triangle filters in low frequency and less triangle filters in high frequency. Also the amplitude of the triangles is decreasing from low frequency to high frequency while the width of the triangles is increasing. It can remain more low frequency signals and drop high frequency which meets the non-linear human ear perception of sound, by being more discriminative at lower frequencies and less discriminative at higher frequencies. 
 
 The resulting filterbank outputs
-![](https://github.com/Celiali/Speech-lab1-MFCC/blob/master/Lab1/figure/Mel%20filterbank%20log%20spectrum2.png)
+
+<img src="https://github.com/Celiali/Speech-lab1-MFCC/blob/master/Lab1/figure/Mel%20filterbank%20log%20spectrum2.png" width=600/>
 
 ## 4.6 Cosine Transform and Liftering
-![](https://github.com/Celiali/Speech-lab1-MFCC/blob/master/Lab1/figure/mfcc2.png)
-Cosine Transform
+
+<img src="https://github.com/Celiali/Speech-lab1-MFCC/blob/master/Lab1/figure/mfcc2.png" width=600/>
+
+**Cosine Transform**
+
 After DCT, the energy will focus on the media and low frequency part. So we can use DCT to directly get the low frequency part from the spectrum.
 
-![](https://github.com/Celiali/Speech-lab1-MFCC/blob/master/Lab1/figure/lmfcc2.png)
-Liftering
+<img src="https://github.com/Celiali/Speech-lab1-MFCC/blob/master/Lab1/figure/lmfcc2.png" width=600/>
+
+**Liftering**
+
 Liftering Function is used to correct the range of the coefficients.
 
 ## 4.7 Compare the liftered MFCCs of different utterances
@@ -88,7 +100,9 @@ Four utterances with two digit "7" and "8"
 
 
 ## 5 Feature Correlation
+
 ![](https://github.com/Celiali/Speech-lab1-MFCC/blob/master/Lab1/figure/compare_cepstrum.png)
+
 The left image is the correlation coefficients after MFCC features. The right image is the correlation coefficients after Mel filterbank features.
 
 **Q:** Are features correlated?
@@ -102,7 +116,7 @@ The left image is the correlation coefficients after MFCC features. The right im
 ## 6 Comparing Utterances
 The result of the global distance between the two sequences:
 
-![](https://github.com/Celiali/Speech-lab1-MFCC/blob/master/Lab1/figure/compare_utterances.png)
+<img src="https://github.com/Celiali/Speech-lab1-MFCC/blob/master/Lab1/figure/compare_utterances.png" width=600/>
 
 **Q:** Does the distance separate digits well even between different speakers?
 
@@ -126,7 +140,7 @@ The result for digit 2 and 3 with 4, 8, 16 and 32 components are as following:
 
 The result for digit 2, 3, 4, 5 with 4 components are as following:
 
-![](https://github.com/Celiali/Speech-lab1-MFCC/blob/master/Lab1/figure/diff_digit_4posterior_8-15.png)
+<img src="https://github.com/Celiali/Speech-lab1-MFCC/blob/master/Lab1/figure/diff_digit_4posterior_8-15.png" width=600/>
 
 **Q:** Are those classes a stable representation of the word if you compare utterances from different speakers? Do you see a relationship between the most active component and the kind of sound at any particular time? Do utterances containing the same spoken word by different speakers contain the same or similar evolution of posteriors?
 
