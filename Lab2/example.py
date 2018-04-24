@@ -21,7 +21,7 @@ if __name__== "__main__":
     wordHMMs = {}
     wordHMMs['o'] = concatHMMs(phoneHMMs, modellist['o'])
 
-    imageN = 4
+    imageN = 5
 
     # 4.1 Gaussian emission probabilities
     verify_obs = example['obsloglik']
@@ -36,8 +36,10 @@ if __name__== "__main__":
     # 4.2 forward algorithm
     verify_log = example['logalpha']
     result_log = forward(result_obs, np.log(wordHMMs['o']['startprob']), np.log(wordHMMs['o']['transmat']))
-    print((abs(verify_log == result_log) < 0.0000001).all())
+    # print((abs(verify_log == result_log) < 0.0000001).all())
+    print((verify_log == result_log).all())
 
+    result_logalpha = result_log.copy()
     result_log[np.isneginf(result_log)] = 0
     plt.subplot(imageN, 1, 2)
     plt.title("forward algorithm", fontsize=10)
@@ -67,12 +69,12 @@ if __name__== "__main__":
     result_logbeta = backward(result_obs, np.log(wordHMMs['o']['startprob']), np.log(wordHMMs['o']['transmat']))
     print((abs(verify_logbeta - result_logbeta)<0.0000001).all())
 
-    result_logbeta[np.isneginf(result_logbeta)] = 0
+    result_logbeta1 = result_logbeta.copy()
+    result_logbeta1[np.isneginf(result_logbeta1)] = 0
     plt.subplot(imageN, 1, 4)
     plt.title("backward algorithm", fontsize=10)
     plt.xticks([])
-    plt.pcolormesh(result_logbeta.T)
-    # plt.show()
+    plt.pcolormesh(result_logbeta1.T)
 
     # 4.4 backward likelihood P(X|θ) of the whole sequence
     N, M = result_logbeta.shape
@@ -82,5 +84,12 @@ if __name__== "__main__":
 
     # 5.1 State posterior probabilities
     verify_loggamma = example['loggamma']
-    result_loggamma = statePosteriors(result_log, result_logbeta)
-    print((abs(verify_loggamma - result_loggamma)<0.0000001).all())
+    result_loggamma = statePosteriors(verify_log, verify_logbeta)
+    print((verify_loggamma == result_loggamma).all())
+
+    result_loggamma[np.isneginf(result_loggamma)] = 0
+    plt.subplot(imageN, 1, 5)
+    plt.title("state posterior probabilities", fontsize=10)
+    plt.xticks([])
+    plt.pcolormesh(result_loggamma.T)
+    plt.show()
