@@ -75,8 +75,7 @@ if __name__== "__main__":
     # plt.show()
 
     # 4.4 backward likelihood P(X|θ) of the whole sequence
-    N, M = result_logbeta.shape
-    a = np.sum(np.log(wordHMMs['o']['transmat'][0:1,0:M]), axis=0)
-    result_logbetalik = logsumexp(result_logbeta[0]+result_obs[1]+a)
-    verify_loglik = example['loglik']
-    print(abs(verify_loglik - result_logbetalik) < 0.0000001)
+    N, M = result_logbeta.shape                                                                      
+    result_logbetalik = logsumexp(result_logbeta[0]+np.log(wordHMMs['o']['startprob'])+result_obs[0])   
+    verify_loglik = example['loglik']                                                                
+    print(abs(verify_loglik - result_logbetalik) < 0.0000001)                                        
