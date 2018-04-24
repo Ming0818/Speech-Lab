@@ -76,7 +76,7 @@ if __name__== "__main__":
 
     # 4.4 backward likelihood P(X|θ) of the whole sequence
     N, M = result_logbeta.shape
-    result_logbetalik = logsumexp(result_logbeta[1] + result_obs[1] + np.log(wordHMMs['o']['transmat'][0, 0:M]))
+    result_logbetalik = logsumexp(result_logbeta[0] + np.log(wordHMMs['o']['startprob']) + result_obs[0])
     verify_loglik = example['loglik']
     print(abs(verify_loglik - result_logbetalik) < 0.0000001)
 
