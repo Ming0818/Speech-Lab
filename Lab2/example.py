@@ -93,3 +93,8 @@ if __name__== "__main__":
     plt.xticks([])
     plt.pcolormesh(result_loggamma.T)
     plt.show()
+    
+    # 5.1.2 test state probabilities in linear domain
+    sum_gamma2 = np.exp(result_loggamma)
+    sum_gamma3 = np.sum(sum_gamma2,axis=1)
+    print(sum_gamma3)
