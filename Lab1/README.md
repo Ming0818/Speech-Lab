@@ -1,12 +1,13 @@
-# Speech-lab1-MFCC
+# DT2119 Lab 1: Feature extraction
 
-# DT2119 Lab 1
+Ci Li cil@kth.se
 
-CI LI cil@kth.se
 Mengdi Xue mengdix@kth.se
 
+## Overall process
+
 The overall process is as the following figure:
-![](https://github.com/Celiali/Speech-lab1-MFCC/blob/master/Lab1/figure/process.png)
+<img src="https://github.com/Celiali/Speech-lab1-MFCC/blob/master/Lab1/figure/process.png" width=500/>
 
 The signal:
 ![](https://github.com/Celiali/Speech-lab1-MFCC/blob/master/Lab1/figure/signal.png)
