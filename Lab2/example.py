@@ -98,3 +98,6 @@ if __name__== "__main__":
     sum_gamma2 = np.exp(result_loggamma)
     sum_gamma3 = np.sum(sum_gamma2,axis=1)
     print(sum_gamma3)
+    
+    # 5.2 retrain
+    mean, variance = updateMeanAndVar(example['lmfcc'],result_loggamma)
