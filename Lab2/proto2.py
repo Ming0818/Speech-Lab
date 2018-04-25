@@ -173,16 +173,23 @@ def updateMeanAndVar(X, log_gamma, varianceFloor=5.0):
     N,M = log_gamma.shape #M = 9
     means = np.zeros([M,D])
     covars = np.zeros([M,D])
-    log_gamma[np.isneginf(log_gamma)] = 0
 
+    # a:分子,b:分母,m:means,c：covariance
     for i in range(M):
-        for j in range(D):
-            means[i,j] = np.sum(log_gamma[:,i] * X[:,j] ) / np.sum(log_gamma[:,i])
-            covars[i,j] = np.sum(log_gamma[:,i] * X[:,j] * X[:,j].T) / np.sum(log_gamma[:,i]) - np.dot(means[:,j], means[:,j].T)
-    temp = np.sum(log_gamma[:, 0] * X[:, 0])
-    print(temp.shape)
-    temp2 = np.sum(log_gamma[:, 0])
-    print(temp2.shape)
+        m_a = 0
+        m_b = 0
+        c_a = 0
+        c_b = 0
+        for t in range(N):
+            m_a =m_a + np.exp(log_gamma[t,i]) * X[t,:]
+            m_b = m_b + np.exp(log_gamma[t,i])
+        means[i,:] = m_a / m_b
 
-    # covars[covars<varianceFloor] = varianceFloor
+        for t in range(N):
+            # for d in range(D):
+            c_a = c_a + np.exp(log_gamma[t,i])* (X[t,:])**2
+            c_b = c_b + np.exp(log_gamma[t,i])
+        covars[i,:] = c_a /c_b - means[i,:]**2
+
+    covars[covars<varianceFloor] = varianceFloor
     return means, covars
