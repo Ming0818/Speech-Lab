@@ -46,7 +46,7 @@ At last, we applied our viterbi algorithm on all the 44 utterances with each of 
 
 ![](https://github.com/Celiali/Speech-Lab/blob/master/Lab2/figure/viterbi_44with11.png)
 
-We can see that there are no mistakes. The path slowly rises and the biggest probability for each state is to stay at the same state.
+We can see that there are no mistakes. We can see that in the beginning and in the end of the sequence, each state tends to stay at the same state more. While in the middle part, the path stays at the same state for a while and then transits to the next state.
 
 ## 4.4 Backward algorithm
 
@@ -73,7 +73,13 @@ The formula in log domain is as following:
 
 ## 5.1 State posterior probabilities
 
-When we sum the posteriors (in linear domain) for each state along the time axis, the results are as following:
+We calculated the probablities according to the following formulas:
+
+<img src="http://chart.googleapis.com/chart?cht=tx&chl=%20%5Cmu_j%3D%5Cfrac%7B%5Csum_%7Bn%3D1%7D%5E%7BN%7D%5Cgamma_n%28j%29x_n%7D%7B%5Csum_%7Bn%3D1%7D%5E%7BN%7D%5Cgamma_n%28j%29%7D" style="border:none;">
+
+<img src="http://chart.googleapis.com/chart?cht=tx&chl=%20%5CSigma_j%3D%5Cfrac%7B%5Csum_%7Bn%3D1%7D%5E%7BN%7D%5Cgamma_n%28j%29x_n%20x_n%5ET%7D%7B%5Csum_%7Bn%3D1%7D%5E%7BN%7D%5Cgamma_n%28j%29%7D%20-%20%5Cmu_j%5Cmu_j%5ET" style="border:none;">
+
+The sum of each time step is 1. When we sum the posteriors (in linear domain) for each state along the time axis, the results are as following:
 
 ```
 3.73001152   3.0047182
@@ -83,7 +89,7 @@ When we sum the posteriors (in linear domain) for each state along the time axis
 0.07729421
 ```
 
-The meaning of the above results is the probability for each state during all observations. That is the probabilities of being in state 1/2/.../9 given the priors and the full set of observations.
+The meaning of the above results is the sum of the probability for each state for all observations, which is the denominator in the first formula(sum of gamma).
 
 When we sum over both states and time steps, the result is: ```70.9999999998```, which is nearly 71 and the same length of the observation sequence. Because for each time step, the sum of the posteriors are 1, so for 71 time steps, the overall sum is 71.
 
@@ -97,4 +103,4 @@ utterance ```data[10]``` starting with ```wordHMMs['9']```:
 
 <img src="https://github.com/Celiali/Speech-Lab/blob/master/Lab2/figure/4-9.png" width=180/>
 
-We can see that they both take 6 rounds to converge. But the first model starts with higher likelihood and converges to a higher likelihood.
+We can see that they both take 6 rounds to converge. But the first model starts with higher likelihood and converges to a higher likelihood because it is the right model.
