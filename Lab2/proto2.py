@@ -177,19 +177,14 @@ def updateMeanAndVar(X, log_gamma, varianceFloor=5.0):
     # a:分子,b:分母,m:means,c：covariance
     for i in range(M):
         m_a = 0
-        m_b = 0
+        b = 0
         c_a = 0
-        c_b = 0
         for t in range(N):
-            m_a =m_a + np.exp(log_gamma[t,i]) * X[t,:]
-            m_b = m_b + np.exp(log_gamma[t,i])
-        means[i,:] = m_a / m_b
-
-        for t in range(N):
-            # for d in range(D):
-            c_a = c_a + np.exp(log_gamma[t,i])* (X[t,:])**2
-            c_b = c_b + np.exp(log_gamma[t,i])
-        covars[i,:] = c_a /c_b - means[i,:]**2
+            m_a = m_a + np.exp(log_gamma[t, i]) * X[t, :]
+            c_a = c_a + np.exp(log_gamma[t, i]) * (X[t, :]) ** 2
+            b = b + np.exp(log_gamma[t, i])
+        means[i, :] = m_a / b
+        covars[i, :] = c_a / b - means[i, :] ** 2
 
     covars[covars<varianceFloor] = varianceFloor
     return means, covars

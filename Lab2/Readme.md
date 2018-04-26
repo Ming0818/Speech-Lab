@@ -73,3 +73,32 @@ Then, we derived the likelihood ```P(X|θ)``` of the whole sequence ```X = {x0, 
 The formula in log domain is as following:
 
 <img src="http://chart.googleapis.com/chart?cht=tx&chl=%20P%28X%7C%5Ctheta%29%20%3D%20log%28%5Csum_%7Bi%3D1%7D%5E%7BM%7Dexp%28log%5Cbeta_0%28i%29%2Blog%5Cpi_i%2Blog%5Cphi_i%28x_0%29%29%29" style="border:none;">
+
+
+## 5.1 State posterior probabilities
+
+When we sum the posteriors (in linear domain) for each state along the time axis, the results are as following:
+
+```
+3.73001152   3.0047182
+4.45622881   5.58497619
+13.5585008   15.80238479
+12.763586    12.02229947
+0.07729421
+```
+
+The meaning of the above results is ...
+
+When we sum over both states and time steps, the result is: ```70.9999999998```, which is nearly 71 and the same length of the observation sequence. Because for each time step, the sum of the posteriors are 1, so for 71 time steps, the overall sum is 71.
+
+## 5.2 Retraining the emission probability distributions
+
+utterance ```data[10]``` starting with ```wordHMMs['4']```:
+
+![](https://github.com/Celiali/Speech-Lab/blob/master/Lab2/figure/4-4.png)
+
+utterance ```data[10]``` starting with ```wordHMMs['9']```:
+
+![](https://github.com/Celiali/Speech-Lab/blob/master/Lab2/figure/4-9.png)
+
+We can see that they both take 6 rounds to converge. But the first model starts with lower likelihood and converges to a lower likelihood.

@@ -41,4 +41,3 @@ if __name__== "__main__":
         print(loglik)
         if loglik - loglik_before <= 1.0:
             break
-    print(np.exp(loglik))

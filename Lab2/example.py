@@ -87,16 +87,20 @@ if __name__== "__main__":
     result_loggamma = statePosteriors(verify_log, verify_logbeta)
     print((verify_loggamma == result_loggamma).all())
 
-    result_loggamma[np.isneginf(result_loggamma)] = 0
+    # result_loggamma[np.isneginf(result_loggamma)] = 0
     plt.subplot(imageN, 1, 5)
     plt.title("state posterior probabilities", fontsize=10)
     plt.xticks([])
     plt.pcolormesh(result_loggamma.T)
-    plt.show()
+    # plt.show()
     
     # 5.1.2 test state probabilities in linear domain
-    sum_gamma2 = np.exp(result_loggamma)
-    sum_gamma3 = np.sum(sum_gamma2,axis=1)
+    exp_gamma = np.exp(result_loggamma)
+    sum_gamma1 = np.sum(exp_gamma,axis=1)
+    print(sum_gamma1)
+    sum_gamma2 = np.sum(exp_gamma, axis=0)
+    print(sum_gamma2)
+    sum_gamma3 = np.sum(sum_gamma2)
     print(sum_gamma3)
     
     # 5.2 retrain
