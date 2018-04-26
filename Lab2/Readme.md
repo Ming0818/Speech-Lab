@@ -28,9 +28,11 @@ The formula in log domain is as following:
 
 <img src="http://chart.googleapis.com/chart?cht=tx&chl=%20logP%28X%7C%5Ctheta%29%3Dlog%28%5Csum_%7Bi%3D1%7D%5E%7BM%7Dexp%28log%5Calpha_N%28i%29%29%29" style="border:none;">
 
+We applied it on the example data and got the likelihood of ```-3769.415```, which is the same as ```example['loglik']```.
+
 At last, we applied our forward algorithm on all the 44 utterances with each of the 11 HMM models 
 
-![](https://github.com/Celiali/Speech-Lab/blob/master/Lab2/figure/score_utter.png)
+<img src="https://github.com/Celiali/Speech-Lab/blob/master/Lab2/figure/score_utter.png" width=600/>
 
 And then we took the maximum likelihood model as winner, the result is as following:
 
@@ -76,6 +78,7 @@ The formula in log domain is as following:
 
 <img src="http://chart.googleapis.com/chart?cht=tx&chl=%20P%28X%7C%5Ctheta%29%20%3D%20log%28%5Csum_%7Bi%3D1%7D%5E%7BM%7Dexp%28log%5Cbeta_0%28i%29%2Blog%5Cpi_i%2Blog%5Cphi_i%28x_0%29%29%29" style="border:none;">
 
+Then we calculated the likelihood ```P(X|θ)``` according to the above formula and it is also ```-3769.415```, which is the same as ```example['loglik']```.
 
 ## 5.1 State posterior probabilities
 
