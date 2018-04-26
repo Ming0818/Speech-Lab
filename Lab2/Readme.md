@@ -46,11 +46,7 @@ At last, we applied our viterbi algorithm on all the 44 utterances with each of 
 
 ![](https://github.com/Celiali/Speech-Lab/blob/master/Lab2/figure/viterbi_44with11.png)
 
-We can see that there are no mistakes.
-
-**Q:** Why does the path look this way?
-
-**A:** 
+We can see that there are no mistakes. The path slowly rises and the biggest probability for each state is to stay at the same state.
 
 ## 4.4 Backward algorithm
 
@@ -87,7 +83,7 @@ When we sum the posteriors (in linear domain) for each state along the time axis
 0.07729421
 ```
 
-The meaning of the above results is ...
+The meaning of the above results is the probability for each state during all observations. That is the probabilities of being in state 1/2/.../9 given the priors and the full set of observations.
 
 When we sum over both states and time steps, the result is: ```70.9999999998```, which is nearly 71 and the same length of the observation sequence. Because for each time step, the sum of the posteriors are 1, so for 71 time steps, the overall sum is 71.
 
@@ -95,10 +91,10 @@ When we sum over both states and time steps, the result is: ```70.9999999998```,
 
 utterance ```data[10]``` starting with ```wordHMMs['4']```:
 
-![](https://github.com/Celiali/Speech-Lab/blob/master/Lab2/figure/4-4.png)
+<img src="https://github.com/Celiali/Speech-Lab/blob/master/Lab2/figure/4-4.png" width=180/>
 
 utterance ```data[10]``` starting with ```wordHMMs['9']```:
 
-![](https://github.com/Celiali/Speech-Lab/blob/master/Lab2/figure/4-9.png)
+<img src="https://github.com/Celiali/Speech-Lab/blob/master/Lab2/figure/4-9.png" width=180/>
 
-We can see that they both take 6 rounds to converge. But the first model starts with lower likelihood and converges to a lower likelihood.
+We can see that they both take 6 rounds to converge. But the first model starts with higher likelihood and converges to a higher likelihood.
