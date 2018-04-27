@@ -48,7 +48,7 @@ We calculated the viterbi probability according to the following formulas:
 
 <img src="http://chart.googleapis.com/chart?cht=tx&chl=%20logV_n%28j%29%3D%5Cmax_%7Bi%3D0%7D%5E%7BM-1%7D%28logV_%7Bn-1%7D%28i%29%2Bloga_%7Bij%7D%29%2Blog%5Cphi_j%28x_n%29" style="border:none;">
 
-We can see that the path starts from state 0 and ends with state 7 since state 0,1,2,7,8,9 are corresponding to 'sil'. And from frames 11 to frames 50, the path starts from state 3 to state 5 corresponding to 'ow'. We can see the path rise slowly because each state tends to stay at the same state more. While in the middle part, the path stays at the same state for a while and then transits to the next state.
+We can see that the path starts from state 0 and ends with state 7 since state 0,1,2,6,7,8 are corresponding to 'sil'. And from frames 11 to frames 50, the path starts from state 3 to state 5 corresponding to 'ow'. We can see the path rise slowly because each state tends to stay at the same state more. While in the middle part, the path stays at the same state for a while and then transits to the next state.
 
 At last, we applied our viterbi algorithm on all the 44 utterances with each of the 11 HMM models, the result is as following:
 
