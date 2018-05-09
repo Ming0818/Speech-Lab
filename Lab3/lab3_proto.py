@@ -56,6 +56,7 @@ def forcedAlignment(lmfcc, phoneHMMs, phoneTrans):
     phones = sorted(phoneHMMs.keys())
     nstates = {phone: phoneHMMs[phone]['means'].shape[0] for phone in phones}
     stateTrans = [phone + '_' + str(stateid) for phone in phoneTrans for stateid in range(nstates[phone])]
+    stateList = [ph + '_' + str(id) for ph in phones for id in range(nstates[ph])]
 
     # -----------Use stateTrans to convert the sequence of Viterbi states (corresponding to
     # -----------the utteranceHMM model) to the unique state names in stateList.
@@ -64,7 +65,11 @@ def forcedAlignment(lmfcc, phoneHMMs, phoneTrans):
         viterbiStateTrans.append(stateTrans[result_path[i]])
     # print((viterbiStateTrans == example['viterbiStateTrans']))
 
-    return viterbiStateTrans
+    viterbiStateIndex = []
+    for i in range(len(viterbiStateTrans)):
+        viterbiStateIndex.append(stateList.index(viterbiStateTrans[i]))
+
+    return viterbiStateIndex
 
 def hmmLoop(hmmmodels, namelist=None):
     """ Combines HMM models in a loop

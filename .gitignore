@@ -158,3 +158,5 @@ fabric.properties
 
 # data
 Lab3/tidigits/
+Lab3/testdata.npz
+Lab3/traindata.npz

@@ -7,10 +7,10 @@ from lab3_proto import *
 from lab3_tools import *
 
 if __name__== "__main__":
-    # phoneHMMs = np.load('lab2_models.npz')['phoneHMMs'].item()
-    # phones = sorted(phoneHMMs.keys())
-    # nstates = {phone: phoneHMMs[phone]['means'].shape[0] for phone in phones}
-    # stateList = [ph + '_' + str(id) for ph in phones for id in range(nstates[ph])]
+    phoneHMMs = np.load('lab2_models.npz')['phoneHMMs'].item()
+    phones = sorted(phoneHMMs.keys())
+    nstates = {phone: phoneHMMs[phone]['means'].shape[0] for phone in phones}
+    stateList = [ph + '_' + str(id) for ph in phones for id in range(nstates[ph])]
     # stateList
     # stateList.index('ay_2')
 
@@ -26,7 +26,10 @@ if __name__== "__main__":
 
     phoneHMMs = np.load('lab2_models.npz')['phoneHMMs'].item()
 
-    viterbiStateTrans = forcedAlignment(lmfcc, phoneHMMs, phoneTrans)
+    # viterbiStateTrans = forcedAlignment(lmfcc, phoneHMMs, phoneTrans)
     # print((viterbiStateTrans == example['viterbiStateTrans']))
+    # frames2trans(viterbiStateTrans, outfilename='z43a.lab')
 
-    frames2trans(viterbiStateTrans, outfilename='z43a.lab')
+    viterbiStateIndex = forcedAlignment(lmfcc, phoneHMMs, phoneTrans)
+
+    print(viterbiStateIndex)
