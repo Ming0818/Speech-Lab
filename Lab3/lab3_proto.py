@@ -1,5 +1,6 @@
 import numpy as np
 from lab3_tools import *
+from tools import *
 
 def words2phones(wordList, pronDict, addSilence=True, addShortPause=False):
     """ word2phones: converts word level to phone level transcription adding silence
@@ -39,6 +40,31 @@ def forcedAlignment(lmfcc, phoneHMMs, phoneTrans):
        list of strings in the form phoneme_index specifying, for each time step
        the state from phoneHMMs corresponding to the viterbi path.
     """
+    example = np.load('lab3_example.npz')['example'].item()
+
+    # -----------get the whole HMM---------------
+    utteranceHMM = concatHMMs(phoneHMMs, phoneTrans)
+    # print((utteranceHMM['transmat'] == example['utteranceHMM']['transmat']).all())
+
+    # -----------viterbi results-----------
+    result_obs = log_multivariate_normal_density_diag(lmfcc, utteranceHMM['means'], utteranceHMM['covars'])
+    result_vlog, result_path = viterbi(result_obs, np.log(utteranceHMM['startprob']), np.log(utteranceHMM['transmat']))
+    # print((result_path==example['viterbiPath']).all())
+    # print(result_vlog==example['viterbiLoglik'])
+
+    # state trans
+    phones = sorted(phoneHMMs.keys())
+    nstates = {phone: phoneHMMs[phone]['means'].shape[0] for phone in phones}
+    stateTrans = [phone + '_' + str(stateid) for phone in phoneTrans for stateid in range(nstates[phone])]
+
+    # -----------Use stateTrans to convert the sequence of Viterbi states (corresponding to
+    # -----------the utteranceHMM model) to the unique state names in stateList.
+    viterbiStateTrans = []
+    for i in range(len(result_path)):
+        viterbiStateTrans.append(stateTrans[result_path[i]])
+    # print((viterbiStateTrans == example['viterbiStateTrans']))
+
+    return viterbiStateTrans
 
 def hmmLoop(hmmmodels, namelist=None):
     """ Combines HMM models in a loop
