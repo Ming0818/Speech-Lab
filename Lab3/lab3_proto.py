@@ -129,3 +129,37 @@ def concatHMMs(hmmmodels, namelist):
     new_H.update({'startprob': new_trans[0]})
 
     return new_H
+
+
+def viterbi(log_emlik, log_startprob, log_transmat):
+    """Viterbi path.
+
+    Args:
+        log_emlik: NxM array of emission log likelihoods, N frames, M states
+        log_startprob: log probability to start in state i
+        log_transmat: transition log probability from state i to j
+
+    Output:
+        viterbi_loglik: log likelihood of the best path
+        viterbi_path: best path
+    """
+    N, M = log_emlik.shape  # N frames, M states
+    viterbi_path = np.zeros([N], dtype=int)
+    V = np.zeros([N, M])
+    B = np.zeros([N, M])
+
+    for i in range(M):
+        V[0, i] = log_startprob[i] + log_emlik[0, i]
+
+    for t in range(1, N):
+        for j in range(M):
+            V[t, j] = np.max(V[t - 1, :] + log_transmat[0:M, j]) + log_emlik[t, j]
+            B[t, j] = np.argmax(V[t - 1, :] + log_transmat[0:M, j])
+
+    viterbi_loglik = np.max(V[N - 1, :])
+    viterbi_path[N - 1] = np.argmax(V[N - 1, :])
+
+    for t in range(N - 2, -1, -1):
+        viterbi_path[t] = B[t + 1, viterbi_path[t + 1]]
+
+    return viterbi_loglik, viterbi_path
