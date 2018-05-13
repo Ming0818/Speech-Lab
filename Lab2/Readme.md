@@ -16,6 +16,10 @@ Also we can see that the distributions between two different digits are differen
 
 ## 4.2 Forward algorithm
 
+The meaning of alpha is the probability of the seeing sequence y{1}, y{2},...,y{t} being in state i at time t, as following:
+
+![](https://wikimedia.org/api/rest_v1/media/math/render/svg/d7ad4d959c520ccc1d473c4cd70626a1509f731f)
+
 We calculated the forward probablity according to the following formulas:
 
 <img src="http://chart.googleapis.com/chart?cht=tx&chl=%20log%5Calpha_%7B0%7D%28j%29%3Dlog%5Cpi_j%2Blog%5Cphi_j%28x_0%29" style="border:none;">
@@ -48,11 +52,19 @@ We can see that all the 44 results are right.
 
 ## 4.3 Viterbi algorithm
 
+Viterbi algorithm is a dynamic programming algorithm to find the most likely sequence of hidden states(Viterbi path) that results in a sequence of observed events. It is to backtrace to find the state sequence of the most probable path as following:
+
+![](https://img-blog.csdn.net/20140530160136578?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYWJjamVubmlmZXI=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast)
+
 We calculated the viterbi probability according to the following formulas:
 
 <img src="http://chart.googleapis.com/chart?cht=tx&chl=%20logV_0%28j%29%3Dlog%5Cpi_j%2Blog%5Cphi_j%28x_0%29" style="border:none;">
 
 <img src="http://chart.googleapis.com/chart?cht=tx&chl=%20logV_n%28j%29%3D%5Cmax_%7Bi%3D0%7D%5E%7BM-1%7D%28logV_%7Bn-1%7D%28i%29%2Bloga_%7Bij%7D%29%2Blog%5Cphi_j%28x_n%29" style="border:none;">
+
+And then find the path according to the following formulas:
+
+<img src="http://chart.googleapis.com/chart?cht=tx&chl=%20B_n%28j%29%3Darg%5Cmax_%7Bi%3D0%7D%5E%7BM-1%7D%28logV_%7Bn-1%7D%28i%29%2Bloga_%7Bij%7D%29" style="border:none;">
 
 We can see that the path starts from state 0 and ends with state 7 since state 0,1,2,6,7,8 are corresponding to 'sil'. And from frames 11 to frames 50, the path starts from state 3 to state 5 corresponding to 'ow'. We can see the path rise slowly because each state tends to stay at the same state more. While in the middle part, the path stays at the same state for a while and then transits to the next state.
 
@@ -66,6 +78,10 @@ At last, we applied our viterbi algorithm on all the 44 utterances with each of 
 We can see that there are no mistakes. It is the same with the result we got in the previous section.
 
 ## 4.4 Backward algorithm
+
+The meaning of beta is the probability of the ending partial sequence y{t+1},...,y{T} given starting state i at time t, as following:
+
+![](https://wikimedia.org/api/rest_v1/media/math/render/svg/ffb576763df197cd5a712f7624970f5193feddb9)
 
 We calculated the backward probability according to the following formulas:
 
@@ -94,6 +110,10 @@ here is the result of example
 
 ## 5.1 State posterior probabilities
 
+The meaning of gamma is the probability of being in state i at time t given the observed sequence Y and the parameters theta, as following:
+
+![](https://wikimedia.org/api/rest_v1/media/math/render/svg/5ecf98a64ec3cdf949076c545223d982bff56748)
+
 We calculated the state posterior probabilities according to the follow formulas:
 
 ![](https://github.com/Celiali/Speech-Lab/blob/master/Lab2/figure/state1.png)
@@ -116,6 +136,8 @@ The meaning of the above results is the sum of the probability for each state fo
 And the sum of each time step is 1. When we sum over both states and time steps, the result is: ```70.9999999998```, which is nearly 71 and the same length of the observation sequence. Because for each time step, the sum of the posteriors are 1, so for 71 time steps, the overall sum is 71.
 
 ## 5.2 Retraining the emission probability distributions
+
+At last, since we concatenate the HMM models, we need to do the retraining to better fit the models with Baum–Welch algorithm, given a sequence of feature vectors and the array of state posteriors probabilities.
 
 We calculated the probablities according to the following formulas:
 
