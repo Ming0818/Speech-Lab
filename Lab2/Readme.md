@@ -10,7 +10,9 @@ Mengdi Xue mengdix@kth.se
 
 ## 4.1 Gaussian emission probabilities
 
+![](https://github.com/Celiali/Speech-Lab/blob/master/Lab2/figure/loglikihood.png)
 We can see that the starting likelihood and the finishing likelihood is the same distribution since they are both corresponding to 'sil'. Between two phonemes, the distribution has a gradual transition and corresponding to 'ow'.
+Also we can see that the distributions between two different digits are different.
 
 ## 4.2 Forward algorithm
 
@@ -29,6 +31,10 @@ The formula in log domain is as following:
 <img src="http://chart.googleapis.com/chart?cht=tx&chl=%20logP%28X%7C%5Ctheta%29%3Dlog%28%5Csum_%7Bi%3D1%7D%5E%7BM%7Dexp%28log%5Calpha_N%28i%29%29%29" style="border:none;">
 
 We applied it on the example data and got the likelihood of ```-3769.415```, which is the same as ```example['loglik']```.
+
+here is the result of example
+![](https://github.com/Celiali/Speech-Lab/blob/master/Lab2/figure/forward.png)
+
 
 At last, we applied our forward algorithm on all the 44 utterances with each of the 11 HMM models 
 
@@ -49,6 +55,9 @@ We calculated the viterbi probability according to the following formulas:
 <img src="http://chart.googleapis.com/chart?cht=tx&chl=%20logV_n%28j%29%3D%5Cmax_%7Bi%3D0%7D%5E%7BM-1%7D%28logV_%7Bn-1%7D%28i%29%2Bloga_%7Bij%7D%29%2Blog%5Cphi_j%28x_n%29" style="border:none;">
 
 We can see that the path starts from state 0 and ends with state 7 since state 0,1,2,6,7,8 are corresponding to 'sil'. And from frames 11 to frames 50, the path starts from state 3 to state 5 corresponding to 'ow'. We can see the path rise slowly because each state tends to stay at the same state more. While in the middle part, the path stays at the same state for a while and then transits to the next state.
+
+here is the result of example
+![](https://github.com/Celiali/Speech-Lab/blob/master/Lab2/figure/viterbi.png)
 
 At last, we applied our viterbi algorithm on all the 44 utterances with each of the 11 HMM models, the result is as following:
 
@@ -80,11 +89,17 @@ The formula in log domain is as following:
 
 Then we calculated the likelihood ```P(X|θ)``` according to the above formula and it is also ```-3769.415```, which is the same as ```example['loglik']```.
 
+here is the result of example
+![](https://github.com/Celiali/Speech-Lab/blob/master/Lab2/figure/backward.png)
+
 ## 5.1 State posterior probabilities
 
 We calculated the state posterior probabilities according to the follow formulas:
 
 ![](https://github.com/Celiali/Speech-Lab/blob/master/Lab2/figure/state1.png)
+
+here is the result of example
+![](https://github.com/Celiali/Speech-Lab/blob/master/Lab2/figure/state_posterior.png)
 
 When we sum the posteriors (in linear domain) for each state along the time axis, the results are as following:
 
