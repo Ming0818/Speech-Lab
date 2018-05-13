@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import itertools
-
+import keras
 from lab1_mfcc import *
 from lab2_prondict import prondict
 from lab3_proto import *
@@ -72,6 +72,16 @@ if __name__== "__main__":
     p_lmfcc = np.load("prediction/prediction_lmfcc_3.npz")['prediciton']
     p_mspec = np.load("prediction/prediction_mspec_3.npz")['prediciton']
     utter_len = np.load('utter_len.npz')['lmfcc']
+
+    # plot the posterior of the first utter
+    # y = keras.utils.to_categorical(test_y, 61)[0:utter_len[0],:]
+    # p = p_lmfcc[0:utter_len[0],:]
+    # plt.title("utter:oo7o")
+    # plt.subplot(2, 1, 1)
+    # plt.plot(p)
+    # plt.subplot(2, 1, 2)
+    # plt.plot(y)
+    # plt.show()
 
     p_lmfcc = np.argmax(p_lmfcc,axis=1)
     p_mspec = np.argmax(p_mspec,axis=1)
