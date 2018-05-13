@@ -125,16 +125,30 @@ From the result, we can see that the color in the diagnol is blighter which mean
 
 ### 5.2 Possible questions
 
-What is the influence of feature kind and size of input context window?
+1. What is the influence of feature kind and size of input context window?
 
-What is the purpose of normalising (standardising) the input feature vectors depending on the activation functions in the network?
+    When we use dynamic features with the same network settings, it is not better than without dynamic features. When we double the hidden layer size,..
 
-What is the influence of the number of units per layer and the number of layers?
+2. What is the purpose of normalising (standardising) the input feature vectors depending on the activation functions in the network?
 
-What is the influence of the activation function (when you try other activation functions than ReLU, you do not need to reach convergence in case you do not have enough time)
+    Normalising is to avoid the influnces of the environments and other aspects for DNN to train better.
 
-What is the influence of the learning rate/learning rate strategy?
+3. What is the influence of the number of units per layer and the number of layers?
 
-How stable are the posteriograms from the network in time?
+    More units per layer and more number of layers can increase the result accuracy. But too many units or too many layers may cause the network to overfit. Under our parameters, the result of 3 layers are the best.
 
-How do the errors distribute depending on phonetic class?
+4. What is the influence of the activation function (when you try other activation functions than ReLU, you do not need to reach convergence in case you do not have enough time)
+
+    The result of Sigmoid function and ReLU function are similar. But ReLU is much faster because it doesn't need to compute power operations.
+
+5. What is the influence of the learning rate/learning rate strategy?
+
+    When we increase the learning rate, the result accuracy increases. But too high learning rate may cause overfitting so if we want to have a higher learning rate we may need some regularization.
+
+6. How stable are the posteriograms from the network in time?
+
+    The result of posteriors during continuous time does not change much, or slowly change from one phoneme to another.
+
+7. How do the errors distribute depending on phonetic class?
+
+    We can see from the confusion matrix that there are more errors with similar phonemes. For example, there are more errors of recognizing 'ah' as 'ay'.
