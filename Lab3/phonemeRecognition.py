@@ -36,8 +36,8 @@ if __name__== "__main__":
     # define model
     model = Sequential()
     # Stacking layers
-    model.add(Dense(units=64, activation='relu', input_dim=lmfcc_train_x.shape[1]))
-    model.add(Dense(units=10, activation='softmax'))
+    model.add(Dense(units=256, activation='relu', input_dim=lmfcc_train_x.shape[1]))
+    model.add(Dense(units=256, activation='softmax'))
 
     # configure its learning process
     model.compile(loss='categorical_crossentropy',optimizer='sgd',metrics=['accuracy'])
@@ -46,10 +46,10 @@ if __name__== "__main__":
 
     # iterate on your training data in batches:
     # x_train and y_train are Numpy arrays --just like in the Scikit-Learn API.
-    model.fit(lmfcc_train_x, train_y, epochs=5, batch_size=32)
+    model.fit(lmfcc_train_x, train_y, epochs=5, batch_size=256)
 
     # Evaluate your performance
-    loss_and_metrics = model.evaluate(lmfcc_val_x, val_y, batch_size=128)
+    loss_and_metrics = model.evaluate(lmfcc_val_x, val_y, batch_size=256)
 
     # generate predictions on new data
-    classes = model.predict(lmfcc_test_x, batch_size=128)
+    classes = model.predict(lmfcc_test_x, batch_size=256)
