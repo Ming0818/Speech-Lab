@@ -87,20 +87,25 @@ if __name__== "__main__":
     p_mspec = np.argmax(p_mspec,axis=1)
 
     # lmfcc: 1. frame-by-frame at the state level && 2. frame-by-frame at the phoneme level
-    accuracy_lmfcc_state = frame_state_level(p_lmfcc,test_y)
-    confusion_lmfcc_state = confusion_matrix(test_y,p_lmfcc)
-    accuracy_lmfcc_phoneme,confusion_lmfcc_phoneme = frame_phoneme_level(p_lmfcc, test_y)
-    plt.subplot(1,2,1)
-    plt.pcolormesh(confusion_lmfcc_state.T,vmax = 50000)
-    plt.subplot(1,2,2)
-    plt.pcolormesh(confusion_lmfcc_phoneme.T, vmax = 150000)
+    # accuracy_lmfcc_state = frame_state_level(p_lmfcc,test_y)
+    # confusion_lmfcc_state = confusion_matrix(test_y,p_lmfcc)
+    # accuracy_lmfcc_phoneme,confusion_lmfcc_phoneme = frame_phoneme_level(p_lmfcc, test_y)
+    # plt.subplot(1,2,1)
+    # plt.pcolormesh(confusion_lmfcc_state.T,vmax = 50000)
+    # plt.subplot(1,2,2)
+    # plt.pcolormesh(confusion_lmfcc_phoneme.T, vmax = 150000)
+    # plt.show()
+
+    # mspec: 1. frame-by-frame at the state level && 2. frame-by-frame at the phoneme level
+    accuracy_mspec_state = frame_state_level(p_mspec,test_y)
+    confusion_mspec_state = confusion_matrix(test_y, p_mspec)
+    accuracy_mspec_phoneme,confusion_mspec_phoneme= frame_phoneme_level(p_mspec, test_y)
+    plt.subplot(1, 2, 1)
+    plt.pcolormesh(confusion_mspec_state.T, vmax=50000)
+    plt.subplot(1, 2, 2)
+    plt.pcolormesh(confusion_mspec_phoneme.T, vmax=150000)
     plt.show()
 
-    # # mspec: 1. frame-by-frame at the state level && 2. frame-by-frame at the phoneme level
-    # accuracy_mspec_state = frame_state_level(p_mspec,test_y)
-    # confusion_mspec_state = confusion_matrix(test_y, p_mspec)
-    # accuracy_mspec_phoneme,confusion_mspec_phoneme= frame_phoneme_level(p_mspec, test_y)
-    #
     # # get each utter
     # utter_lmfcc = get_each_utter(p_lmfcc,utter_len)
     # utter_mspec = get_each_utter(p_mspec,utter_len)
