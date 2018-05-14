@@ -120,7 +120,7 @@ The confusion matrix of lmfcc
 The confusion matrix of mspec
 ![](https://github.com/Celiali/Speech-Lab/blob/master/Lab3/figure/confusion_matrix_mspec_3layers.png)
 
-From the result, we can see that the color in the diagnol is blighter which means most of the phoneme or states are correctly recognized. The blightest part focus on 39th,40th,41th state and 13th phoneme which represent the state related to silence.
+From the result, we can see that the color in the diagnol is brighter which means most of the phoneme or states are correctly recognized. The brightest part focus on 39th,40th,41th state and 13th phoneme which represent the state related to silence.
 
 
 ### 5.2 Possible questions
