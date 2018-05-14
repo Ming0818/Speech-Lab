@@ -127,7 +127,7 @@ From the result, we can see that the color in the diagnol is blighter which mean
 
 1. What is the influence of feature kind and size of input context window?
 
-    When we use dynamic features with the same network settings, it is not better than without dynamic features. When we double the hidden layer size,..
+    When we use dynamic features with the same network settings, it is not better than without dynamic features. We guessed if doubling the size of hidden layer can help, but we get ```58.58%``` with the hidden layer size of ```256, 128, 64```	and ```57.62%``` with hidden layer size of ```512, 256, 128```. So it doesn't help.
 
 2. What is the purpose of normalising (standardising) the input feature vectors depending on the activation functions in the network?
 
@@ -139,11 +139,17 @@ From the result, we can see that the color in the diagnol is blighter which mean
 
 4. What is the influence of the activation function (when you try other activation functions than ReLU, you do not need to reach convergence in case you do not have enough time)
 
-    The result of Sigmoid function and ReLU function are similar. But ReLU is much faster because it doesn't need to compute power operations.
+    The result of Sigmoid function and ReLU function are similar. Their loss figure are as following:
+    
+    ![](https://github.com/Celiali/Speech-Lab/blob/master/Lab3/figure/compare_sigmoid_relu.png)
+    
+    The test accuracy of Sigmoid (3 layers, lmfcc, eta=0.002)is ```60.14%``` and ReLU is ```59.76%```. But ReLU is much faster because it doesn't need to compute power operations.
 
 5. What is the influence of the learning rate/learning rate strategy?
 
-    When we increase the learning rate, the result accuracy increases. But too high learning rate may cause overfitting so if we want to have a higher learning rate we may need some regularization.
+    When we increase the learning rate, the result accuracy increases. But too high learning rate may cause overfitting so if we want to have a higher learning rate we may need some regularization. The result of different learning rate on the whole datasets is as following. Their test accuracy are: 16.83%, 59.76%, and 61.01%. We can see that 0.0002 is more suitable for our data.
+    
+    ![](https://github.com/Celiali/Speech-Lab/blob/master/Lab3/figure/compare_learningrate.png)
 
 6. How stable are the posteriograms from the network in time?
 
