@@ -40,7 +40,7 @@ The whole train set contains 8623 datas, the number of man samples is 4235 and t
 
 For dynamic features, we need to stack 7 features symmetrically distributed around the current time step.
 
-In order to have the dynamic features, we extract and reverse ```feature[:,1:3]```, ```feature[:,-4:-2]``` and stack them at the beginning and end of the feature, like this:```hstack(reverse(feature[:,1:3]),feature,reverse(feature[:,-4:-2]))```
+In order to have the dynamic features, we first extract and reverse ```feature[:,1:3]```, ```feature[:,-4:-2]``` and stack them at the beginning and end of the feature, like this:```hstack(reverse(feature[:,1:3]),feature,reverse(feature[:,-4:-2]))``` and then use a slide window of size 7 to get the dynamic features.
 
 ### 4.6 Feature Standardisation
 
