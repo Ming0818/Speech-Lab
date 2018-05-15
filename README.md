@@ -11,3 +11,9 @@ Report: [lab1 report link](https://github.com/Celiali/Speech-Lab/blob/master/Lab
 Code: ```Lab2\```
 
 Report: [lab2 report link](https://github.com/Celiali/Speech-Lab/blob/master/Lab2/Readme.md)
+
+## Lab 3: 
+
+Code: ```Lab3\```
+
+Report: [lab3 report link](https://github.com/Celiali/Speech-Lab/blob/master/Lab3/Readme.md)
