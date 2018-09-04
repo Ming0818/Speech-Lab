@@ -1,4 +1,4 @@
-# DD2119 Speech and Speaker Recognition Labs 2018
+# DT2119 Speech and Speaker Recognition Labs 2018
 
 ## Lab 1: 
 
